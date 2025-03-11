@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "H5Yc0silMQXGRmAsFsSMksFZX62WVggsYlrH7nk1KIo=",
+  "Source": "HealthApp.Domain",
+  "BasePath": "_content/HealthApp.Domain",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

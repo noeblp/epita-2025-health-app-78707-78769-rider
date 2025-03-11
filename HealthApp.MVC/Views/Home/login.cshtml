@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Login";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <form method="post" action="/Home/SubmitLogin">
+        <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
+            
+            <input type="email" name="Email" placeholder="Email address" required>
+            <input type="password" name="Password" placeholder="Password" required>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+</p>
