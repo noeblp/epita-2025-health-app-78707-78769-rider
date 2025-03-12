@@ -30,4 +30,9 @@
       <ProjectReference Include="..\HealthApp.Razor\HealthApp.Razor.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Modif_data\Modif_patient\" />
+      <Folder Include="Pages\Doctor\" />
+    </ItemGroup>
+
 </Project>

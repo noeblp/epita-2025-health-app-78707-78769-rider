@@ -57,7 +57,7 @@ public class HomeController : Controller
     public IActionResult Doctors()
     {
         
-        return View();
+        return RedirectToAction("HomeDoctor","Doctor");
     }
 
     public IActionResult UI_Patient()
@@ -114,7 +114,7 @@ public class HomeController : Controller
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 push_patient(email);
-                return RedirectToAction("UI_doctor");
+                return RedirectToAction("HomeDoctor","Doctor");
             }
             if (isAuthenticated == 2)
             {
