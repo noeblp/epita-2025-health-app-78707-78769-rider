@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using HealthApp.Domain;
 
 namespace hospital.Modif_data
 {
@@ -73,6 +74,7 @@ namespace hospital.Modif_data
 
         public static int is_user(SqliteConnection connection, string username, string password)
         {
+            
             var query = "SELECT user_role FROM users WHERE user_email = @user_email AND user_password = @user_password";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
@@ -86,7 +88,7 @@ namespace hospital.Modif_data
             if (result != null) // Vérifie si un utilisateur correspondant existe
             {
                 string? userRole = result.ToString(); // Stocke le rôle de l'utilisateur
-
+                
                 if (userRole == "D") 
                 {
                     return 1;
@@ -99,6 +101,8 @@ namespace hospital.Modif_data
             }
             return 0; // Aucun utilisateur trouvé
         }
+        
+        
         
         
         

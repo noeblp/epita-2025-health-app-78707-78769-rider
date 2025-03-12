@@ -1,11 +1,18 @@
-using HealthApp.Razor.Data;
+using HealthApp.Razor.Data;  // Assurez-vous que votre namespace est correct
 using Microsoft.EntityFrameworkCore;
- // Remplacez par votre namespace réel
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Ajouter les services au conteneur.
 builder.Services.AddControllersWithViews();
+
+// Configuration pour la session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);  // Durée de vie de la session
+    options.Cookie.HttpOnly = true;  // Le cookie est uniquement accessible via HTTP (pas JavaScript)
+    options.Cookie.IsEssential = true;  // Assurez-vous que les cookies sont utilisés même en l'absence de consentement
+});
 
 // Configurer le DbContext pour utiliser SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -15,6 +22,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var app = builder.Build();
 
 // Configurer le pipeline de requêtes HTTP.
+app.UseSession();  // Ajouter ici pour que la session fonctionne indépendamment de l'environnement
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

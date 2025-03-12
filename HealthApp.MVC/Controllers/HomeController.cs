@@ -4,7 +4,6 @@ using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Modif_data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SQLiteConnectionTest;
 
 
@@ -27,7 +26,9 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        
+        ViewBag.P = true; 
+        ViewBag.D = false;
+        HttpContext.Session.Clear(); 
         return View();
     }
 
@@ -40,6 +41,10 @@ public class HomeController : Controller
     
     public IActionResult Register()
     {
+        var userId = HttpContext.Session.GetString("user_first_name");
+        var username = HttpContext.Session.GetString("user_last_name");
+        var email = HttpContext.Session.GetString("user_email");
+        Console.WriteLine(userId + "  "+username+ "  " + email);
         return View();
     }
 
@@ -50,6 +55,7 @@ public class HomeController : Controller
 
     public IActionResult Doctors()
     {
+        
         return View();
     }
 
@@ -68,11 +74,28 @@ public class HomeController : Controller
         return View();
     }
     
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear(); 
+        ViewBag.P = false;
+        ViewBag.D = true;
+        return RedirectToAction("Index");
+    }
+
+
+    public void push_patient(string email)
+    {
+        ViewBag.P = true; 
+        ViewBag.D = false;
+        HttpContext.Session.SetString("user_first_name", email);
+        HttpContext.Session.SetString("user_last_name", email);
+        HttpContext.Session.SetString("user_email", email);
+    }
+    
     
     [HttpPost]
     public void SubmitForm(string firstName, string lastName, string email, string password)
     {
-        
         using (var connection = ModifUser.ConnectToDatabase())
         {
                 ModifUser.InsertUser(connection, firstName,lastName,email,password);
@@ -81,38 +104,33 @@ public class HomeController : Controller
     
     public IActionResult SubmitLogin(string email, string password)
     {
+        
         using (var connection = ModifUser.ConnectToDatabase())
         {
             int isAuthenticated = ModifUser.is_user(connection, email, password);
         
-            if (isAuthenticated==1)
+            if (isAuthenticated == 1)
             {
+                push_patient(email);
                 return RedirectToAction("UI_doctor");
             }
-            if (isAuthenticated==2)
+            if (isAuthenticated == 2)
             {
+                push_patient(email);
                 return RedirectToAction("UI_patient");
             }
-
             if (isAuthenticated == 3)
             {
+                push_patient(email);
                 return RedirectToAction("UI_admin");
             }
-            
-            else
-            {
-                ViewBag.ErrorMessage = "Email ou mot de passe incorrect.";
-                return View("Login"); 
-            }
+            return View("Login"); 
         }
-
-        
-
     }
+
     
     public void SubmitDoctors(string firstName, string lastName, string email, string password)
     {
-        
         using (var connection = ModifUser.ConnectToDatabase())
         {
             modif_doctors.InsertDoctors(connection, firstName,lastName,email,password);
