@@ -85,9 +85,9 @@ namespace hospital.Modif_data
             var result = command.ExecuteScalar();
             connection.Close();
 
-            if (result != null) // Vérifie si un utilisateur correspondant existe
+            if (result != null) 
             {
-                string? userRole = result.ToString(); // Stocke le rôle de l'utilisateur
+                string? userRole = result.ToString(); 
                 
                 if (userRole == "D") 
                 {
@@ -97,7 +97,7 @@ namespace hospital.Modif_data
                 {
                     return 2;
                 }
-                return 3; // Autres rôles
+                return 0; // Autres rôles
             }
             return 0; // Aucun utilisateur trouvé
         }

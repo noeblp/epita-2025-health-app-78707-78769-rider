@@ -1,4 +1,5 @@
-using HealthApp.Razor.Data;  // Assurez-vous que votre namespace est correct
+using HealthApp.Razor.Data;
+using Microsoft.AspNetCore.Authentication.Cookies; // Assurez-vous que votre namespace est correct
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,9 +35,15 @@ else
     app.UseHsts();
 }
 
+
+
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseAuthentication();
 app.UseRouting();
 
 app.MapControllerRoute(

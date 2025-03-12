@@ -1,9 +1,12 @@
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Security.Claims;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Modif_data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using SQLiteConnectionTest;
 
 
@@ -26,9 +29,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        ViewBag.P = true; 
-        ViewBag.D = false;
-        HttpContext.Session.Clear(); 
+        
         return View();
     }
 
@@ -76,17 +77,15 @@ public class HomeController : Controller
     
     public IActionResult Logout()
     {
-        HttpContext.Session.Clear(); 
-        ViewBag.P = false;
-        ViewBag.D = true;
+        HttpContext.Session.SetString("IsLoggedIn", "true");
+        HttpContext.Session.Clear();
+        ViewBag.P = null;
         return RedirectToAction("Index");
     }
 
 
     public void push_patient(string email)
     {
-        ViewBag.P = true; 
-        ViewBag.D = false;
         HttpContext.Session.SetString("user_first_name", email);
         HttpContext.Session.SetString("user_last_name", email);
         HttpContext.Session.SetString("user_email", email);
@@ -102,29 +101,34 @@ public class HomeController : Controller
         }
     }
     
+    
+    
     public IActionResult SubmitLogin(string email, string password)
     {
-        
+       
         using (var connection = ModifUser.ConnectToDatabase())
         {
             int isAuthenticated = ModifUser.is_user(connection, email, password);
         
             if (isAuthenticated == 1)
             {
+                HttpContext.Session.SetString("IsLoggedIn", "true");
                 push_patient(email);
                 return RedirectToAction("UI_doctor");
             }
             if (isAuthenticated == 2)
             {
+                HttpContext.Session.SetString("IsLoggedIn", "true");
                 push_patient(email);
                 return RedirectToAction("UI_patient");
             }
             if (isAuthenticated == 3)
             {
+                HttpContext.Session.SetString("IsLoggedIn", "true");
                 push_patient(email);
                 return RedirectToAction("UI_admin");
             }
-            return View("Login"); 
+            return View("Index"); 
         }
     }
 
