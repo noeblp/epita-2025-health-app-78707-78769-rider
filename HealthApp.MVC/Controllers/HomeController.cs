@@ -1,11 +1,11 @@
+using System.Data.SQLite;
 using System.Diagnostics;
-
+using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Modif_data;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SQLiteConnectionTest;
-using Microsoft.AspNetCore.Identity;
 
 
 namespace hospital.Controllers;
@@ -13,16 +13,21 @@ namespace hospital.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
     
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _logger = logger;
+        _context = context;
+        _context.Database.EnsureCreated();
+        
         
     }
 
     public IActionResult Index()
     {
+        
         return View();
     }
 
