@@ -7,7 +7,6 @@ using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SQLiteConnectionTest;
 
 
 namespace hospital.Controllers;

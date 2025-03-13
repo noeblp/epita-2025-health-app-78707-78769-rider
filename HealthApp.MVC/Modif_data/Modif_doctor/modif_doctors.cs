@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using System;
 
-namespace SQLiteConnectionTest
+namespace hospital.Modif_data
 {
     public static class modif_doctors
     {
