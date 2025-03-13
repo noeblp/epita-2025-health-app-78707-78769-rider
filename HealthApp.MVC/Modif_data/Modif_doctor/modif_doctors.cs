@@ -43,7 +43,7 @@ namespace hospital.Modif_data
                 maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
                 Console.WriteLine(maxId);
             }
-            string query = "INSERT INTO users (user_id, user_first_name,user_last_name , user_email,user_password) VALUES (@user_id, @user_first_name, @user_last_name, @user_email, @user_password);";
+            string query = "INSERT INTO users (user_id, user_first_name,user_last_name , user_email,user_password, user_role) VALUES (@user_id, @user_first_name, @user_last_name, @user_email, @user_password,@user_role);";
             using (var command = new SqliteCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@user_id", maxId+1);
@@ -51,7 +51,7 @@ namespace hospital.Modif_data
                 command.Parameters.AddWithValue("@user_last_name", last_name);
                 command.Parameters.AddWithValue("@user_email", email);
                 command.Parameters.AddWithValue("@user_password", password);
-                command.Parameters.AddWithValue("@user_role", "P");
+                command.Parameters.AddWithValue("@user_role", "D");
 
                 command.ExecuteNonQuery();
                 Console.WriteLine("Utilisateur inséré avec succès.");
