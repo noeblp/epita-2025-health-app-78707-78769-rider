@@ -7,29 +7,29 @@
     var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
 }
 
-<h2 style="text-align: center;">Semaine du @startOfWeek.ToString("dd MMMM yyyy")</h2>
+<h2 style="text-align: center; font-size: 1.5rem;">Semaine du @startOfWeek.ToString("dd MMMM yyyy")</h2>
 
 <!-- Centrage du tableau avec flexbox -->
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto; width: 100vh;  height: 80vh;">
-    <table style="width: 100%; height: 100%; border-collapse: collapse;">
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
+    <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 100%; overflow: auto;">
         <thead>
         <tr style="background-color: #f0f0f0;">
-            <th style="width: 14%;">Lun</th>
-            <th style="width: 14%;">Mar</th>
-            <th style="width: 14%;">Mer</th>
-            <th style="width: 14%;">Jeu</th>
-            <th style="width: 14%;">Ven</th>
-            <th style="width: 14%;">Sam</th>
-            <th style="width: 14%;">Dim</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Lun</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Mar</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Mer</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Jeu</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Ven</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Sam</th>
+            <th style="flex: 1; text-align: center; padding: 5px;">Dim</th>
         </tr>
         </thead>
         <tbody>
-        <tr style="height: 14%;">
+        <tr>
             @for (int i = 0; i < 7; i++)
             {
                 var currentDate = startOfWeek.AddDays(i);
                 var eventToday = events?.FirstOrDefault(e => e.Date.Date == currentDate.Date);
-                <td style="border: 1px solid black; text-align: center; vertical-align: top; padding: 10px;">
+                <td style="border: 1px solid black; text-align: center; vertical-align: top; padding: 10px; font-size: 1rem;">
                     <b>@currentDate.Day</b>
                     @if (eventToday != null)
                     {
@@ -43,10 +43,10 @@
 </div>
 
 <!-- Liens pour navigation entre les semaines -->
-<div style="text-align: left; margin-top: 20px; border: 2px solid #000; padding: 10px; display: flex; justify-content: flex-start; width: 300px; position: fixed; left: 10px; bottom: 20px;">
-    <a href="@Url.Action("Index", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000;">← Semaine précédente</a>
+<div style="text-align: left; margin-top: 20px; border: 2px solid #000; padding: 10px; display: flex; justify-content: flex-start; position: fixed; left: 10px; bottom: 20px; width: auto;">
+    <a href="@Url.Action("Index", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Semaine précédente</a>
 </div>
 
-<div style="text-align: right; margin-top: 20px; border: 2px solid #000; padding: 10px; display: flex; justify-content: flex-end; width: 300px; position: fixed; right: 10px; bottom: 20px;">
-    <a href="@Url.Action("Index", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000;">Semaine suivante →</a>
+<div style="text-align: right; margin-top: 20px; border: 2px solid #000; padding: 10px; display: flex; justify-content: flex-end; position: fixed; right: 10px; bottom: 20px; width: auto;">
+    <a href="@Url.Action("Index", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Semaine suivante →</a>
 </div>
