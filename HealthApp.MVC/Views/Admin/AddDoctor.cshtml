@@ -49,29 +49,13 @@
             Add New Doctor
         </div>
         <div class="card-body">
-            <form method="post" action="Admin/AddDoctor/">
-                <div class="mb-3">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstName" name="FirstName" placeholder="Enter first name" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastName" name="LastName" placeholder="Enter last name" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="Email" placeholder="Enter email address" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="Password" placeholder="Enter password" required>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Add Doctor</button>
+            <form method="post" action="/Admin/Add">
+                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
+                    <input type="text" name="FirstName" placeholder="First name" required>
+                    <input type="text" name="LastName" placeholder="Last name" required>
+                    <input type="email" name="Email" placeholder="Email address" required>
+                    <input type="password" name="Password" placeholder="Password" required>
+                    <button type="submit">Submit</button>
                 </div>
             </form>
         </div>

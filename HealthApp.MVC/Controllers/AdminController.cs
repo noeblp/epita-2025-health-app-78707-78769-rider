@@ -19,12 +19,18 @@ public class AdminController : Controller
         
     }
 
-    public IActionResult AddDoctor(string first_name, string last_name, string email,string password)
+    public IActionResult AddDoctor()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public void Add(string firstname, string lastname, string email,string password)
     {
         using (var connection = modif_doctors.ConnectToDatabase())
         {
-            modif_doctors.InsertDoctors(connection, first_name,last_name,email,password);
+            modif_doctors.InsertDoctors(connection, firstname,lastname,email,password);
         }
-        return View();
+        
     }
 }
