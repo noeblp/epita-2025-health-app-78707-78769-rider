@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,10 +52,18 @@
         <div class="card-body">
             <form method="post" action="/Admin/Add">
                 <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
-                    <input type="text" name="FirstName" placeholder="First name" required>
-                    <input type="text" name="LastName" placeholder="Last name" required>
-                    <input type="email" name="Email" placeholder="Email address" required>
-                    <input type="password" name="Password" placeholder="Password" required>
+                    <div class="mb-3">
+                        <input type="text" name="FirstName" class="form-control" placeholder="👤 Full Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="LastName" class="form-control" placeholder="🔒 Last Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" name="Email" class="form-control" placeholder="📧 Email address" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" name="Password" class="form-control" placeholder="🔑 Password" required>
+                    </div>
                     <button type="submit">Submit</button>
                 </div>
             </form>

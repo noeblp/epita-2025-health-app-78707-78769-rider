@@ -1,6 +1,11 @@
+using System;
 using HealthApp.Razor.Data;
-using Microsoft.AspNetCore.Authentication.Cookies; // Assurez-vous que votre namespace est correct
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder; // Assurez-vous que votre namespace est correct
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

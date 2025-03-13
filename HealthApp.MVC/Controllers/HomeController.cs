@@ -1,3 +1,4 @@
+using System;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -7,6 +8,8 @@ using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 
 namespace hospital.Controllers;
