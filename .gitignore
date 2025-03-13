@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+HealthApp.Domain/bin/Debug/net9.0/HealthApp.Domain.dll
+/HealthApp.Domain/bin
+/HealthApp.Domain/bin
+/HealthApp.Domain/bin/Debug/net9.0
+/HealthApp.Domain/obj/Debug
