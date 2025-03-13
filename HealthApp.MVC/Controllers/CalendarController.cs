@@ -9,26 +9,22 @@ namespace hospital.Controllers
 {
     public class CalendarController : Controller
     {
-        public IActionResult Index(int? year, int? month, int? week)
+        public IActionResult Calendar(int? year, int? month, int? week)
         {
             int currentYear = year ?? DateTime.Now.Year;
             int currentMonth = month ?? DateTime.Now.Month;
 
-            // Calcul de la semaine actuelle si elle n'est pas définie
             DateTime firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
             int currentWeek = week ?? GetWeekOfMonth(DateTime.Now);
 
-            // Calcul du premier lundi du mois
             var firstMonday = firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek + 1);
             if (firstMonday > firstDayOfMonth) firstMonday = firstMonday.AddDays(-7);
 
-            // Déterminer la date de début de la semaine
             var startOfWeek = firstMonday.AddDays((currentWeek - 1) * 7);
 
-            // Liste d'événements fictifs (remplace par une BDD si nécessaire)
             var events = new List<Calendar>
             {
-                //new Calendar { Title = "Réunion", Date = new DateTime(currentYear, currentMonth, 5) },
+                new Calendar { Title = "Réunion", Date = new DateTime(currentYear, currentMonth, 13) },
                 //new Calendar { Title = "Conférence", Date = new DateTime(currentYear, currentMonth, 15) }
             };
 
