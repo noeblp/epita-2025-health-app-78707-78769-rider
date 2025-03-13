@@ -1,18 +1,60 @@
-@{
-    ViewData["Title"] = "Register";
-}
-<h1>@ViewData["Title"]</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Hospital Appointment System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .register-container {
+            max-width: 400px;
+            margin: auto;
+            margin-top: 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            height: 50px;
+        }
+        .register-btn {
+            width: 100%;
+            height: 50px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
 
-<p>
-<form method="post" action="/Home/SubmitForm">
-    <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
-        <input type="text" name="FirstName" placeholder="First name" required>
-        <input type="text" name="LastName" placeholder="Last name" required>
-        <input type="email" name="Email" placeholder="Email address" required>
-        <input type="password" name="Password" placeholder="Password" required>
-        <button type="submit">Submit</button>
+<!-- Registration Form -->
+<div class="register-container">
+    <h2 class="text-center text-primary fw-bold">Create an Account</h2>
+    <p class="text-center text-muted">Join us and manage your appointments easily</p>
+
+    <form method="post" action="/Home/SubmitRegister">
+        <div class="mb-3">
+            <input type="text" name="FullName" class="form-control" placeholder="👤 Full Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="email" name="Email" class="form-control" placeholder="📧 Email address" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" name="Password" class="form-control" placeholder="🔑 Password" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" name="ConfirmPassword" class="form-control" placeholder="🔒 Confirm Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary register-btn">Register</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <p class="text-muted">Already have an account? <a asp-area="" asp-controller="Home" asp-action="Login" class="text-primary">Login</a></p>
     </div>
-</form>
+</div>
 
-</p>
-
+</body>
+</html>
