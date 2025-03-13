@@ -32,11 +32,11 @@ namespace SQLiteConnectionTest
         {
             
             int maxId = 0;
-            string max_id = "SELECT MAX(user_id) AS max_id FROM users";
+            string max_id ="SELECT MAX(user_id) AS max_id FROM users";
             using (var command = new SqliteCommand(max_id, connection))
             {
                 
-
+ 
                 object result = command.ExecuteScalar();
 
                 // Vérifier si le résultat est nul (si la table est vide, cela peut renvoyer null)
