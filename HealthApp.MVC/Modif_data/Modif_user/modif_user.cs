@@ -14,6 +14,7 @@ namespace hospital.Modif_data
             {
                 var connection = new SqliteConnection(ConnectionString);
                 connection.Open();
+                
                 Console.WriteLine("Connexion à la base de données réussie !");
                 return connection;
             }

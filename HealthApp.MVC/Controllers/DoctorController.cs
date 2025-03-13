@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using SQLiteConnectionTest;
 
 
+
 namespace hospital.Controllers;
 
 public class DoctorController : Controller
