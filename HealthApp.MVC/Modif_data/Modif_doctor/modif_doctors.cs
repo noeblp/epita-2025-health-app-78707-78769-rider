@@ -1,11 +1,11 @@
 using Microsoft.Data.Sqlite;
 using System;
 
-namespace SQLiteConnectionTest
+namespace hospital.Modif_data
 {
     public static class modif_doctors
     {
-        static string connectionString = "Data Source=HealthApp.MVC.db";
+        static string connectionString = "Data Source=hospital.db";
 
         // Fonction pour se connecter à la base de données
         public static SqliteConnection ConnectToDatabase()
@@ -51,6 +51,7 @@ namespace SQLiteConnectionTest
                 command.Parameters.AddWithValue("@user_last_name", last_name);
                 command.Parameters.AddWithValue("@user_email", email);
                 command.Parameters.AddWithValue("@user_password", password);
+                command.Parameters.AddWithValue("@user_role", "P");
 
                 command.ExecuteNonQuery();
                 Console.WriteLine("Utilisateur inséré avec succès.");

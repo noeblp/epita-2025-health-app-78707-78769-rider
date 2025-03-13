@@ -4815,19 +4815,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vendr\\.nuget\\packages\\": {}
+    "/Users/noebelperin/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.MVC\\HealthApp.MVC.csproj",
+      "projectUniqueName": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.MVC/HealthApp.MVC.csproj",
       "projectName": "HealthApp.MVC",
-      "projectPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.MVC\\HealthApp.MVC.csproj",
-      "packagesPath": "C:\\Users\\vendr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.MVC\\obj\\",
+      "projectPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.MVC/HealthApp.MVC.csproj",
+      "packagesPath": "/Users/noebelperin/.nuget/packages/",
+      "outputPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.MVC/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\vendr\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/noebelperin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -4839,11 +4839,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Domain\\HealthApp.Domain.csproj": {
-              "projectPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Domain\\HealthApp.Domain.csproj"
+            "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Domain/HealthApp.Domain.csproj": {
+              "projectPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Domain/HealthApp.Domain.csproj"
             },
-            "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Razor\\HealthApp.Razor.csproj": {
-              "projectPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Razor\\HealthApp.Razor.csproj"
+            "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Razor/HealthApp.Razor.csproj": {
+              "projectPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Razor/HealthApp.Razor.csproj"
             }
           }
         }
@@ -4924,7 +4924,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\vendr\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

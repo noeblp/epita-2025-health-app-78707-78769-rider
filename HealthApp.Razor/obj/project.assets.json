@@ -4731,19 +4731,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vendr\\.nuget\\packages\\": {}
+    "/Users/noebelperin/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Razor\\HealthApp.Razor.csproj",
+      "projectUniqueName": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Razor/HealthApp.Razor.csproj",
       "projectName": "HealthApp.Razor",
-      "projectPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Razor\\HealthApp.Razor.csproj",
-      "packagesPath": "C:\\Users\\vendr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vendr\\OneDrive\\Documents\\GitHub\\epita-2025-health-app-78707-78769-rider\\HealthApp.Razor\\obj\\",
+      "projectPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Razor/HealthApp.Razor.csproj",
+      "packagesPath": "/Users/noebelperin/.nuget/packages/",
+      "outputPath": "/Users/noebelperin/Desktop/Dorset/epita-2025-health-app-78707-78769-rider/HealthApp.Razor/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\vendr\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/noebelperin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -4823,7 +4823,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\vendr\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
