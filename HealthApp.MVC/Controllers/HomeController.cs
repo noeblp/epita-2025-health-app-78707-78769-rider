@@ -45,10 +45,11 @@ public class HomeController : Controller
     
     public IActionResult Register()
     {
+        var userI = HttpContext.Session.GetInt32("user_id");
         var userId = HttpContext.Session.GetString("user_first_name");
         var username = HttpContext.Session.GetString("user_last_name");
         var email = HttpContext.Session.GetString("user_email");
-        Console.WriteLine(userId + "  "+username+ "  " + email);
+        Console.WriteLine(userId + "  "+username+ "  " + email+ "  " + userI);
         return View();
     }
 
@@ -89,6 +90,7 @@ public class HomeController : Controller
 
     public void push_patient(string email)
     {
+        HttpContext.Session.SetInt32("user_id", 8);
         HttpContext.Session.SetString("user_first_name", email);
         HttpContext.Session.SetString("user_last_name", email);
         HttpContext.Session.SetString("user_email", email);
