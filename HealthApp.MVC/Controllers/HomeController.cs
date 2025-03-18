@@ -38,6 +38,8 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+       
+        HttpContext.Session.Clear();
         //send_mail.SendConfirmationEmail("belperin.n@gmail.com","ravus","ravus");
         return View();
     }
@@ -88,12 +90,13 @@ public class HomeController : Controller
     }
 
 
-    public void push_patient(string email)
+    public void push_patient(int id,string email,string role)
     {
-        HttpContext.Session.SetInt32("user_id", 8);
+        HttpContext.Session.SetInt32("user_id", id);
         HttpContext.Session.SetString("user_first_name", email);
         HttpContext.Session.SetString("user_last_name", email);
         HttpContext.Session.SetString("user_email", email);
+        HttpContext.Session.SetString("user_role", role);
     }
     
     
@@ -114,23 +117,24 @@ public class HomeController : Controller
         using (var connection = ModifUser.ConnectToDatabase())
         {
             int isAuthenticated = ModifUser.is_user(connection, email, password);
-        
+            int id = ModifUser.get_id(connection,email);
+            string role = ModifUser.get_role(connection,email);
             if (isAuthenticated == 1)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                push_patient(email);
+                push_patient(id,email,role);
                 return RedirectToAction("HomeDoctor","Doctor");
             }
             if (isAuthenticated == 2)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                push_patient(email);
+                push_patient(id,email,role);
                 return RedirectToAction("UI_patient");
             }
             if (isAuthenticated == 3)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                push_patient(email);
+                push_patient(id,email,role);
                 return RedirectToAction("UI_admin");
             }
             return View("Index"); 

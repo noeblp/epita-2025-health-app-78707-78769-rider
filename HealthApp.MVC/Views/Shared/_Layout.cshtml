@@ -30,18 +30,40 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Doctors">Doctors</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AddDoctor">Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Manage">Patient</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Search">Search for a doctor</a>
-                    </li>
+                    
+                    
+                    <!--***********************************************************************************************-->
+
+                    @if (Context.Session.GetString("user_role") == "D")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Doctors">Doctors</a>
+                        </li>
+                    }
+
+                    <!--***********************************************************************************************-->
+                    
+                    @if (Context.Session.GetString("user_role") == "P")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Search">Search for a doctor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Manage">Manage</a>
+                        </li>
+                    }
+
+                    <!--***********************************************************************************************-->
+                    
+                    @if (Context.Session.GetString("user_role") == "A")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AddDoctor">Admin</a>
+                        </li>
+                    }
+
+
+                    <!--***********************************************************************************************-->
                     
 
 
@@ -55,6 +77,8 @@
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Login">Login</a>
                         }
                     </li>
+
+                    
 
                     
                     

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using hospital.Modif_data;
 using hospital.Views.Patient;
 using Microsoft.AspNetCore.Mvc;

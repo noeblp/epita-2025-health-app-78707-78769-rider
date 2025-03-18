@@ -25,7 +25,7 @@ namespace hospital.Controllers
             if (firstMonday > firstDayOfMonth) firstMonday = firstMonday.AddDays(-7);
 
             var startOfWeek = firstMonday.AddDays((currentWeek - 1) * 7);
-            HttpContext.Session.GetString("user_id");
+            
 
 
 
@@ -74,11 +74,11 @@ namespace hospital.Controllers
 
         static List<string> GetPatientEvents(SqliteConnection connection, int? patientId)
         {
-            var query = "SELECT date FROM appointment WHERE patient_id = @patient_id";
+            var query = "SELECT date FROM appointment WHERE patient_id = @patient";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
-            command.Parameters.AddWithValue("@patient_id", patientId);
-
+            command.Parameters.AddWithValue("@patient", patientId);
+            Console.WriteLine(patientId);
             connection.Open();
             using SqliteDataReader reader = command.ExecuteReader();
 

@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Data.Sqlite;
 using HealthApp.Domain;
+using Microsoft.AspNetCore.Http;
 
 namespace hospital.Modif_data
 {
@@ -77,11 +78,12 @@ namespace hospital.Modif_data
         public static int is_user(SqliteConnection connection, string username, string password)
         {
             
-            var query = "SELECT user_role FROM users WHERE user_email = @user_email AND user_password = @user_password";
+            var query = "SELECT user_role, user_id FROM users WHERE user_email = @user_email AND user_password = @user_password";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
             command.Parameters.AddWithValue("@user_email", username);
             command.Parameters.AddWithValue("@user_password", password);
+            
 
             connection.Open();
             var result = command.ExecuteScalar();
@@ -99,11 +101,33 @@ namespace hospital.Modif_data
                 {
                     return 2;
                 }
-                return 0; // Autres rôles
+                return 3; // Autres rôles
             }
             return 0; // Aucun utilisateur trouvé
         }
+
+
+        public static int get_id(SqliteConnection connection, string email)
+        {
+            var query = "SELECT user_id FROM users WHERE user_email = @email";
+            using SqliteCommand command = new SqliteCommand(query, connection);
+            command.Parameters.AddWithValue("@email", email);
+            connection.Open();
+            var result = command.ExecuteScalar();
+            connection.Close();
+            return result != null ? Convert.ToInt32(result) : -1;
+        }
         
+        public static string get_role(SqliteConnection connection, string email)
+        {
+            var query = "SELECT user_role FROM users WHERE user_email = @email";
+            using SqliteCommand command = new SqliteCommand(query, connection);
+            command.Parameters.AddWithValue("@email", email);
+            connection.Open();
+            var result = command.ExecuteScalar();
+            connection.Close();
+            return result.ToString() ;
+        }
         
         
         
