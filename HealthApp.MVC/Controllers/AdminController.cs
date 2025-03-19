@@ -25,11 +25,11 @@ public class AdminController : Controller
     }
 
     [HttpPost]
-    public void Add(string firstname, string lastname, string email,string password)
+    public void Add(string firstname, string lastname, string email,string password, string specialty)
     {
         using (var connection = modif_doctors.ConnectToDatabase())
         {
-            modif_doctors.InsertDoctors(connection, firstname,lastname,email,password);
+            modif_doctors.InsertDoctors(connection, firstname,lastname,email,password,specialty);
         }
         
     }

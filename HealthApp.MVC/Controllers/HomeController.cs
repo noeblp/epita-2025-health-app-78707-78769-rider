@@ -1,13 +1,9 @@
 using System;
-using System.Data.SQLite;
 using System.Diagnostics;
-using System.Security.Claims;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Modif_data;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -134,7 +130,7 @@ public class HomeController : Controller
             if (isAuthenticated == 3)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                push_patient(id,email,role);
+                push_patient(id,email,"A");
                 return RedirectToAction("UI_admin");
             }
             return View("Index"); 
@@ -146,7 +142,7 @@ public class HomeController : Controller
     {
         using (var connection = ModifUser.ConnectToDatabase())
         {
-            modif_doctors.InsertDoctors(connection, firstName,lastName,email,password);
+            //modif_doctors.InsertDoctors(connection, firstName,lastName,email,password);
                
         }
     }
