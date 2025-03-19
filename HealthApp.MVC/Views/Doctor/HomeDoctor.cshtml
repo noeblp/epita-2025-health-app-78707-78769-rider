@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +13,7 @@
         }
         .dashboard-container {
             max-width: 900px;
+            height: 1000px;
             margin: auto;
             margin-top: 50px;
             padding: 30px;
@@ -18,9 +21,13 @@
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
         }
+        .content {
+            display: flex;
+            gap: 20px;
+        }
         .calendar {
-            width: 100%;
-            height: 400px;
+            flex: 1;
+            height: 800px;
             background: #e9ecef;
             border-radius: 10px;
             display: flex;
@@ -30,22 +37,79 @@
             font-weight: bold;
         }
         .appointment-list {
-            margin-top: 20px;
+            flex: 2;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
 <div class="dashboard-container">
+    
     <h2 class="text-center text-primary fw-bold">Doctor Dashboard</h2>
-    
-    <!-- Calendar Section -->
-    <div class="calendar mb-4">
-        <p>Doctor's Calendar (Appointments will be displayed here)</p>
+    <li class="accordion-button">
+        <a class="btn btn-primary text-white fw-bold px-4 py-2"
+           asp-area="" asp-controller="Calendar" asp-action="Calendar">
+            All Calendar
+        </a>
+    </li>
+    <div class="content">
+        <!-- Calendar Section -->
+        <div class="calendar">
+            @{
+                ViewData["Title"] = "Calendrier Dynamique";
+                
+                var events = ViewBag.Events as List<hospital.Models.Calendar>;
+                var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
+            }
+            <tbody>
+            
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
+    <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
+        <thead>
+        <tr style="background-color: #f0f0f0; height: 5%">
+            <th style="border: 1px solid black; text-align: center; padding: 0px; width: 30%;"></th>
+            
+        </tr>
+        </thead>
+        <tbody>
+        <h2 style="text-align: center; font-size: 1.5rem;">@startOfWeek.ToString("dd MMMM yyyy")</h2>
+        @for (int hour = 8; hour <= 18; hour++)
+        {
+            <tr>
+                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; height: 50px;">@hour:00</td>
+                @for (int i = 0; i < 1; i++)
+                {
+                    var currentDate = startOfWeek.AddDays(i);
+                    var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden;">
+                        @if (eventToday != null && eventToday.Any())
+                        {
+                            @foreach (var evt in eventToday)
+                            {
+                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title</div>
+                            }
+                        }
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+            
+
+        </div>
+
+        <!-- Appointment Approval Section -->
+        <div class="appointment-list">
+            <h4>Upcoming Appointments</h4>
+            <p>List of appointments will be displayed here.</p>
+        </div>
     </div>
-    
-    <!-- Appointment Approval Section -->
-    
 </div>
 
 </body>

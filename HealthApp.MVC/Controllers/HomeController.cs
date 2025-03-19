@@ -63,7 +63,7 @@ public class HomeController : Controller
     public IActionResult Doctors()
     {
         
-        return RedirectToAction("Calendar","Calendar");
+        return RedirectToAction("HomeDoctor","Doctor");
     }
 
     public IActionResult UI_Patient()

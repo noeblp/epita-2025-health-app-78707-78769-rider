@@ -6,7 +6,12 @@
     var events = ViewBag.Events as List<hospital.Models.Calendar>;
     var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
 }
-
+<li class="button">
+    <a class="btn btn-primary text-white fw-bold px-4 py-2"
+       asp-area="" asp-controller="Doctor" asp-action="HomeDoctor">
+        Home
+    </a>
+</li>
 <h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
 
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">

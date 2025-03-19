@@ -35,11 +35,8 @@ namespace hospital.Modif_data
             string max_id ="SELECT MAX(user_id) AS max_id FROM users";
             using (var command = new SqliteCommand(max_id, connection))
             {
-                
- 
                 object result = command.ExecuteScalar();
 
-                // Vérifier si le résultat est nul (si la table est vide, cela peut renvoyer null)
                 maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
                 Console.WriteLine(maxId);
             }
@@ -57,7 +54,7 @@ namespace hospital.Modif_data
                 Console.WriteLine("Utilisateur inséré avec succès.");
             }
             
-            string query_doctor = "INSERT INTO doctors (doctor_id, doctor_first_name, doctor_last_name,doctor_email) VALUES (@doctor_id, @doctor_first_name, @doctor_email, @doctor_last_name);";
+            string query_doctor = "INSERT INTO doctors (doctor_id, doctor_first_name, doctor_last_name,doctor_email) VALUES (@doctor_id, @doctor_first_name, @doctor_last_name,@doctor_email);";
             using (var command2 = new SqliteCommand(query_doctor, connection))
             {
                 command2.Parameters.AddWithValue("@doctor_id", maxId+1);

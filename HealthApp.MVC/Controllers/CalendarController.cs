@@ -27,8 +27,7 @@ namespace hospital.Controllers
             var startOfWeek = firstMonday.AddDays((currentWeek - 1) * 7);
             
 
-
-
+            
             List<string> res;
             int? userId = HttpContext.Session.GetInt32("user_id");
             using (var connection = ModifUser.ConnectToDatabase())
@@ -70,6 +69,8 @@ namespace hospital.Controllers
             DateTime firstDay = new DateTime(date.Year, date.Month, 1);
             return (date.Day + (int)firstDay.DayOfWeek - 1) / 7 + 1;
         }
+
+        
 
 
         static List<string> GetPatientEvents(SqliteConnection connection, int? patientId)
