@@ -1,3 +1,5 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 
 <!DOCTYPE html>
@@ -63,7 +65,10 @@
                 ViewData["Title"] = "Calendrier Dynamique";
                 
                 var events = ViewBag.Events as List<hospital.Models.Calendar>;
+                var new_events = ViewBag.NewEvents as List<hospital.Models.Calendar>;
                 var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
+                
+                
             }
             <tbody>
             
@@ -111,8 +116,9 @@
             <tr>
                 @for (int i = 0; i < 1; i++)
                 {
-                    var currentDate = startOfWeek.AddDays(i);
-                    var eventToday = events?.ToList();
+                   
+                    var eventToday = new_events?.ToList();
+                    
                     <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden;">
                         @if (eventToday != null && eventToday.Any())
                         {
@@ -122,16 +128,16 @@
                                 <div style="margin-top: 5px; padding: 5px; border: 1px solid gray; background-color: #f8f8f8; border-radius: 5px;">
 
                                     <!-- Formulaire pour accepter -->
-                                    <form method="post" asp-controller="Event" asp-action="AcceptEvent">
-                                        <input type="hidden" name="id" value="@evt.Id" />
+                                    <form method="post" asp-controller="Doctor" asp-action="AcceptEvent">
+                                        <input type="hidden" name="id" value="@evt.user_Id" />
                                         <button type="submit" style="background-color: green; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer;">
                                             Accepter
                                         </button>
                                     </form>
 
                                     <!-- Formulaire pour refuser -->
-                                    <form method="post" asp-controller="Event" asp-action="DeclineEvent">
-                                        <input type="hidden" name="id" value="@evt.Id" />
+                                    <form method="post" asp-controller="Doctor" asp-action="DeclineEvent">
+                                        <input type="hidden" name="id" value="@evt.user_Id" />
                                         <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
                                             Refuser
                                         </button>

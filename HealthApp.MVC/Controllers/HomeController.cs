@@ -6,7 +6,8 @@ using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-
+using Appointments = hospital.Models.Appointments;
+using HealthApp.Razor.Data;
 
 namespace hospital.Controllers;
 
