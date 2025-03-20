@@ -9,9 +9,16 @@ public class Admins
 {
     [Key]
     public int admin_id { get; set; }
-    // Ajoutez d'autres colonnes si nécessaire
 }
 
+public class Patients
+{
+    [Key]
+    public int patient_id { get; set; }
+    public string patient_name { get; set; }
+    public string patient_last_name { get; set; }
+    public string patient_email { get; set; }
+}
 public class Appointments
 {
     [Key]
@@ -31,5 +38,6 @@ public class ApplicationDbContext : IdentityDbContext
     
     public DbSet<Appointments> Appointment { get; set; }
 
+    public DbSet<Patients> Patient { get; set; }
     
 }
