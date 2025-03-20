@@ -108,6 +108,43 @@
         <div class="appointment-list">
             <h4>Upcoming Appointments</h4>
             <p>List of appointments will be displayed here.</p>
+            <tr>
+                @for (int i = 0; i < 1; i++)
+                {
+                    var currentDate = startOfWeek.AddDays(i);
+                    var eventToday = events?.ToList();
+                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden;">
+                        @if (eventToday != null && eventToday.Any())
+                        {
+                            @foreach (var evt in eventToday)
+                            {
+                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title</div>
+                                <div style="margin-top: 5px; padding: 5px; border: 1px solid gray; background-color: #f8f8f8; border-radius: 5px;">
+
+                                    <!-- Formulaire pour accepter -->
+                                    <form method="post" asp-controller="Event" asp-action="AcceptEvent">
+                                        <input type="hidden" name="id" value="@evt.Id" />
+                                        <button type="submit" style="background-color: green; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer;">
+                                            Accepter
+                                        </button>
+                                    </form>
+
+                                    <!-- Formulaire pour refuser -->
+                                    <form method="post" asp-controller="Event" asp-action="DeclineEvent">
+                                        <input type="hidden" name="id" value="@evt.Id" />
+                                        <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                            Refuser
+                                        </button>
+                                    </form>
+
+                                </div>
+                            }
+                        }
+                    </td>
+                }
+            </tr>
+
+
         </div>
     </div>
 </div>
