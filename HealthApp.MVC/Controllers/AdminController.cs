@@ -25,12 +25,17 @@ public class AdminController : Controller
     }
 
     [HttpPost]
-    public void Add(string firstname, string lastname, string email,string password, string specialty)
+    public IActionResult Add(string firstname, string lastname, string email,string password, string specialty)
     {
         using (var connection = modif_doctors.ConnectToDatabase())
         {
-            modif_doctors.InsertDoctors(connection, firstname,lastname,email,password,specialty);
+            modif_doctors.InsertDoctors(connection, firstname, lastname, email, password, specialty);
+            return RedirectToAction("AddDoctor");
         }
-        
+        // return RedirectToAction("Index", "Home");
+
+
+
+
     }
 }

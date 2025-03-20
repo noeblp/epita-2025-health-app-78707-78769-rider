@@ -53,23 +53,45 @@
             <form method="post" action="/Admin/Add">
                 <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
                     <div class="mb-3">
-                        <input type="text" name="FirstName" class="form-control" placeholder="👤 Full Name" required>
+                        <input type="text" name="FirstName" class="form-control" placeholder="👤 Full Name" required style="padding: 12px; font-size: 1.1rem;">
                     </div>
                     <div class="mb-3">
-                        <input type="text" name="LastName" class="form-control" placeholder="🔒 Last Name" required>
+                        <input type="text" name="LastName" class="form-control" placeholder="🔒 Last Name" required style="padding: 12px; font-size: 1.1rem;">
                     </div>
                     <div class="mb-3">
-                        <input type="email" name="Email" class="form-control" placeholder="📧 Email address" required>
+                        <input type="email" name="Email" class="form-control" placeholder="📧 Email address" required style="padding: 12px; font-size: 1.1rem;">
                     </div>
                     <div class="mb-3">
-                        <input type="password" name="Password" class="form-control" placeholder="🔑 Password" required>
+                        <input type="password" name="Password" class="form-control" placeholder="🔑 Password" required style="padding: 12px; font-size: 1.1rem;">
                     </div>
                     <div class="mb-3">
-                        <input type="text" name="Specialty" class="form-control" placeholder=" test" required>
+                        <select name="Specialty" class="form-control" required style="padding: 12px; font-size: 1.1rem;">
+                            <option value="">Select Specialty</option>
+                            <option value="Anesthesiology">Anesthesiology</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Dermatology">Dermatology</option>
+                            <option value="Endocrinology">Endocrinology</option>
+                            <option value="Gastroenterology">Gastroenterology</option>
+                            <option value="Hematology">Hematology</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                            <option value="Oncology">Oncology</option>
+                            <option value="Ophthalmology">Ophthalmology</option>
+                            <option value="Orthopedics">Orthopedics</option>
+                            <option value="Otolaryngology">Otolaryngology</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Psychiatry">Psychiatry</option>
+                            <option value="Pulmonology">Pulmonology</option>
+                            <option value="Radiology">Radiology</option>
+                            <option value="Rheumatology">Rheumatology</option>
+                            <option value="Urology">Urology</option>
+                        </select>
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit" class="btn btn-primary" style="padding: 12px; font-size: 1.1rem;">Add Doctor</button>
                 </div>
             </form>
+            
+
         </div>
     </div>
 </div>
