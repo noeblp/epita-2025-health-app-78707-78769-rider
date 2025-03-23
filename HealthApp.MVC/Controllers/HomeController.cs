@@ -35,7 +35,7 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
-       
+          
         HttpContext.Session.Clear();
         //send_mail.SendConfirmationEmail("belperin.n@gmail.com","ravus","ravus");
         return View();

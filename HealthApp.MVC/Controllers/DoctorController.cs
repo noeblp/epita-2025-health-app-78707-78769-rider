@@ -71,7 +71,7 @@ public class DoctorController : Controller
             int j = date.Day;
             int m = date.Month;
             int a = date.Year;
-            events.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 10, 30, 0), user_Id = userId});
+            events.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 11, 30, 0), user_Id = userId});
             Console.WriteLine(j);
         }
         foreach (var c in res2)
@@ -85,12 +85,7 @@ public class DoctorController : Controller
             newEvents.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 10, 30, 0), user_Id = userId});
             Console.WriteLine(j);
         }
-        /*var events = new List<Calendar>
-        {
-            //new Calendar { Title = "Réunion", Date = new DateTime(currentYear, currentMonth, 18, 10, 30, 0) },
-            //new Calendar { Title = "Conférence", Date = new DateTime(currentYear, currentMonth, 20, 14, 0, 0) }
-        };*/
-
+        
         ViewBag.CurrentYear = currentYear;
         ViewBag.CurrentMonth = currentMonth;
         ViewBag.CurrentWeek = currentWeek;
