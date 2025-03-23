@@ -28,7 +28,7 @@ namespace hospital.Controllers
             
 
             
-            List<string> res;
+            List<(string,string)> res;
             int? userId = HttpContext.Session.GetInt32("user_id");
             using (var connection = ModifUser.ConnectToDatabase())
             {
@@ -40,20 +40,21 @@ namespace hospital.Controllers
 
             foreach (var c in res)
             {
-                string dateStr = c; 
-                DateTime date = DateTime.ParseExact(dateStr, "dd/MM/yyyy", null);
-
+                (string,string) dateStr = c; 
+                DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
                 int j = date.Day;
                 int m = date.Month;
                 int a = date.Year;
-                events.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 10, 30, 0) });
+                DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
+                Console.WriteLine("jour=" +jour);
+                int h = jour.Hour;
+                int ms = jour.Minute;
+                Console.WriteLine("hour = " + h+" minute"+ms);
+            
+                events.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
                 Console.WriteLine(j);
             }
-            /*var events = new List<Calendar>
-            {
-                //new Calendar { Title = "Réunion", Date = new DateTime(currentYear, currentMonth, 18, 10, 30, 0) },
-                //new Calendar { Title = "Conférence", Date = new DateTime(currentYear, currentMonth, 20, 14, 0, 0) }
-            };*/
+            
 
             ViewBag.CurrentYear = currentYear;
             ViewBag.CurrentMonth = currentMonth;
@@ -73,32 +74,27 @@ namespace hospital.Controllers
         
 
 
-        static List<string> GetPatientEvents(SqliteConnection connection, int? patientId)
+        static List<(string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
         {
-            var query = "SELECT date FROM appointment WHERE patient_id = @patient";
+            var query = "SELECT date,hour FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
             command.Parameters.AddWithValue("@patient", patientId);
-            Console.WriteLine(patientId);
+            command.Parameters.AddWithValue("@letter", "A");
             connection.Open();
+        
             using SqliteDataReader reader = command.ExecuteReader();
-
-            List<string> dates = new List<string>();
+            List<(string,string)> dates = new List<(string,string)>();
+            string date = "";
+            string hour = "";
             while (reader.Read())
             {
-                dates.Add(reader["date"].ToString());
+                date=reader["date"].ToString();
+                hour = reader["hour"].ToString();
+                dates.Add((date,hour));
             }
-
             connection.Close();
-
-            if (dates.Count > 0)
-            {
-                Console.WriteLine("Rendez-vous trouvés : " + string.Join(", ", dates));
-            }
-            else
-            {
-                Console.WriteLine("Aucun rendez-vous trouvé.");
-            }
+        
             return dates;
         }
 

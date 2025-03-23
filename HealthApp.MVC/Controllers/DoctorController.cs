@@ -50,7 +50,7 @@ public class DoctorController : Controller
             
 
             
-        List<string> res;
+        List<(string,string)> res;
         List<string> res2;
         int? userId = HttpContext.Session.GetInt32("user_id");
         using (var connection = ModifUser.ConnectToDatabase())
@@ -65,13 +65,18 @@ public class DoctorController : Controller
 
         foreach (var c in res)
         {
-            string dateStr = c; 
-            DateTime date = DateTime.ParseExact(dateStr, "dd/MM/yyyy", null);
-
+            (string,string) dateStr = c; 
+            DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
             int a = date.Year;
-            events.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 11, 30, 0), user_Id = userId});
+            DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
+            Console.WriteLine("jour=" +jour);
+            int h = jour.Hour;
+            int ms = jour.Minute;
+            Console.WriteLine("hour = " + h+" minute"+ms);
+            
+            events.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
             Console.WriteLine(j);
         }
         foreach (var c in res2)
@@ -82,7 +87,7 @@ public class DoctorController : Controller
             int j = date.Day;
             int m = date.Month;
             int a = date.Year;
-            newEvents.Add(new Calendar { Title = "Réunion", Date = new DateTime(a, m, j, 10, 30, 0), user_Id = userId});
+            newEvents.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, 13, 30, 0), user_Id = userId});
             Console.WriteLine(j);
         }
         
@@ -90,6 +95,7 @@ public class DoctorController : Controller
         ViewBag.CurrentMonth = currentMonth;
         ViewBag.CurrentWeek = currentWeek;
         ViewBag.StartOfWeek = currentDay;
+        ViewBag.Events = null;
         ViewBag.Events = events;
         ViewBag.NewEvents = newEvents;
         
@@ -133,34 +139,47 @@ public class DoctorController : Controller
         return dates;
     }
 
-    static List<string> GetPatientEvents(SqliteConnection connection, int? patientId)
+    static List<(string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
     {
-        var query = "SELECT date FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);
         command.Parameters.AddWithValue("@letter", "A");
         connection.Open();
+        
         using SqliteDataReader reader = command.ExecuteReader();
-
-        List<string> dates = new List<string>();
+        List<(string,string)> dates = new List<(string,string)>();
+        string date = "";
+        string hour = "";
         while (reader.Read())
         {
-            dates.Add(reader["date"].ToString());
+            date=reader["date"].ToString();
+            hour = reader["hour"].ToString();
+            dates.Add((date,hour));
         }
-
         connection.Close();
-
-        if (dates.Count > 0)
-        {
-            Console.WriteLine("prevu Rendez-vous trouvés : " + string.Join(", ", dates));
-        }
-        else
-        {
-            Console.WriteLine("Aucun rendez-vous trouvé.");
-        }
+        
         return dates;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     [HttpPost]
     public IActionResult AcceptEvent(int id)
