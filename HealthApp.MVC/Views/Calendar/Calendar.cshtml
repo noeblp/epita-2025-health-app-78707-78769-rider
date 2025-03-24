@@ -34,36 +34,49 @@ else
         <thead>
         <tr style="background-color: #f0f0f0; height: 5%">
             <th style="border: 1px solid black; text-align: center; padding: 10px; width: 10%;"></th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday </th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday @(startOfWeek.Day)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday @(startOfWeek.Day+1)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday @(startOfWeek.Day+2)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday @(startOfWeek.Day+3)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday @(startOfWeek.Day+4)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday @(startOfWeek.Day+5)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday @(startOfWeek.Day+6)</th>
         </tr>
         </thead>
         <tbody>
         @for (int hour = 8; hour <= 18; hour++)
         {
             <tr>
-                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%;">@hour:00</td>
+                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; background-color: #f8f9fa; padding: 10px;">
+                    @hour:00
+                </td>
                 @for (int i = 0; i < 7; i++)
                 {
                     var currentDate = startOfWeek.AddDays(i);
                     var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
-                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden;">
+                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden; padding: 5px;">
                         @if (eventToday != null && eventToday.Any())
                         {
                             @foreach (var evt in eventToday)
                             {
-                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title</div>
+                                <div style="background: linear-gradient(135deg, #ff7e5f, #feb47b);color: white;font-weight: bold;
+                            word-wrap: break-word;
+                            margin-top: 5px;
+                            padding: 8px;
+                            border-radius: 6px;
+                            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+                            transition: transform 0.2s ease-in-out;
+                            cursor: pointer;
+                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    @evt.Title
+                                </div>
                             }
                         }
                     </td>
                 }
             </tr>
         }
+
         </tbody>
     </table>
 </div>

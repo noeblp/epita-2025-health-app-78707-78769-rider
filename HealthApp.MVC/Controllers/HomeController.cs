@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Appointments = hospital.Models.Appointments;
 using HealthApp.Razor.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.Sqlite;
 
 namespace hospital.Controllers;
 
@@ -29,7 +31,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        
+        ViewBag.incorrect = false;
         return View();
     }
 
@@ -103,7 +105,26 @@ public class HomeController : Controller
         using (var connection = ModifUser.ConnectToDatabase())
         {
                 ModifUser.InsertUser(connection, firstName,lastName,email,password);
+                int maxId = 0;
+                const string max_id = "SELECT MAX(user_id) AS max_id FROM users";
+                using (var command = new SqliteCommand(max_id, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                }
+
+                _context.Patient.Add(new Patients
+                {
+                    patient_email = email, patient_id = maxId, patient_last_name = lastName, patient_name = firstName
+                });
+                
+                
+                
+                _context.SaveChanges();
         }
+        
+        
+        
     }
     
     
@@ -114,27 +135,32 @@ public class HomeController : Controller
         using (var connection = ModifUser.ConnectToDatabase())
         {
             int isAuthenticated = ModifUser.is_user(connection, email, password);
-            int id = ModifUser.get_id(connection,email);
-            string role = ModifUser.get_role(connection,email);
+            
             if (isAuthenticated == 1)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                int id = ModifUser.get_id(connection,email);
+                string role = ModifUser.get_role(connection,email);
                 push_patient(id,email,role);
                 return RedirectToAction("HomeDoctor","Doctor");
             }
             if (isAuthenticated == 2)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                int id = ModifUser.get_id(connection,email);
+                string role = ModifUser.get_role(connection,email);
                 push_patient(id,email,role);
                 return RedirectToAction("UI_patient");
             }
             if (isAuthenticated == 3)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                int id = ModifUser.get_id(connection,email);
                 push_patient(id,email,"A");
                 return RedirectToAction("UI_admin");
             }
-            return View("Index"); 
+            ViewBag.incorrect = true;
+            return View("Login"); 
         }
     }
 

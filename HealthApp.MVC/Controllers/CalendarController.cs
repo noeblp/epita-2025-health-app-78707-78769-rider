@@ -28,7 +28,7 @@ namespace hospital.Controllers
             
 
             
-            List<(string,string)> res;
+            List<(string,string,string)> res;
             int? userId = HttpContext.Session.GetInt32("user_id");
             using (var connection = ModifUser.ConnectToDatabase())
             {
@@ -40,7 +40,7 @@ namespace hospital.Controllers
 
             foreach (var c in res)
             {
-                (string,string) dateStr = c; 
+                (string,string,string) dateStr = c; 
                 DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
                 int j = date.Day;
                 int m = date.Month;
@@ -51,7 +51,7 @@ namespace hospital.Controllers
                 int ms = jour.Minute;
                 Console.WriteLine("hour = " + h+" minute"+ms);
             
-                events.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+                events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
                 Console.WriteLine(j);
             }
             
@@ -74,9 +74,9 @@ namespace hospital.Controllers
         
 
 
-        static List<(string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
+        static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
         {
-            var query = "SELECT date,hour FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+            var query = "SELECT date,hour,name FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
             command.Parameters.AddWithValue("@patient", patientId);
@@ -84,14 +84,16 @@ namespace hospital.Controllers
             connection.Open();
         
             using SqliteDataReader reader = command.ExecuteReader();
-            List<(string,string)> dates = new List<(string,string)>();
+            List<(string,string,string)> dates = new List<(string,string,string)>();
             string date = "";
             string hour = "";
+            string name = "";
             while (reader.Read())
             {
                 date=reader["date"].ToString();
                 hour = reader["hour"].ToString();
-                dates.Add((date,hour));
+                name = reader["name"].ToString();
+                dates.Add((date,hour,name));
             }
             connection.Close();
         

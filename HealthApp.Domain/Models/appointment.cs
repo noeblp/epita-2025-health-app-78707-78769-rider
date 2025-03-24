@@ -6,4 +6,5 @@ public class Appointments
     public int patient_id { get; set; }
     public string date { get; set; }
     public string valide { get; set; }
+    public string name { get; set; }
 }

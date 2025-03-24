@@ -4,7 +4,7 @@ namespace HealthApp.Domain;
 
 public class hospital
 {
-    public class Userp
+    public class User
     {
         public int user_id { get; set; }
         public string user_first_name { get; set; }
@@ -18,16 +18,18 @@ public class hospital
     {
         public int patient_id { get; set; }
         public string patient_name { get; set; }
-        public int patient_last_name { get; set; }
-        public int patient_email { get; set; }
+        public string patient_last_name { get; set; }
+        public string patient_email { get; set; }
     }
+    
     
     public class AppDbContext : DbContext
     {
         
         
-        public DbSet<Userp> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        
         public AppDbContext()
         {
 

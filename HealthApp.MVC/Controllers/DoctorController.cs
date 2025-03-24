@@ -50,13 +50,13 @@ public class DoctorController : Controller
             
 
             
-        List<(string,string)> res;
-        List<string> res2;
+        List<(string,string,string)> res;
+        List<(string,string,string)> res2;
         int? userId = HttpContext.Session.GetInt32("user_id");
         using (var connection = ModifUser.ConnectToDatabase())
         {
-            res =GetPatientEvents(connection,userId);
-            res2=GetPatientEventsNew(connection,userId);
+            res =GetPatientEvents(connection,userId,"A");
+            res2=GetPatientEvents(connection,userId,"N");
         }
 
 
@@ -65,7 +65,7 @@ public class DoctorController : Controller
 
         foreach (var c in res)
         {
-            (string,string) dateStr = c; 
+            (string,string,string) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
@@ -76,18 +76,23 @@ public class DoctorController : Controller
             int ms = jour.Minute;
             Console.WriteLine("hour = " + h+" minute"+ms);
             
-            events.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
             Console.WriteLine(j);
         }
         foreach (var c in res2)
         {
-            string dateStr = c; 
-            DateTime date = DateTime.ParseExact(dateStr, "dd/MM/yyyy", null);
-
+            (string,string,string) dateStr = c; 
+            DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
             int a = date.Year;
-            newEvents.Add(new Calendar { Title = "Réu", Date = new DateTime(a, m, j, 13, 30, 0), user_Id = userId});
+            DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
+            Console.WriteLine("jour=" +jour);
+            int h = jour.Hour;
+            int ms = jour.Minute;
+            Console.WriteLine("hour = " + h+" minute"+ms);
+            
+            newEvents.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
             Console.WriteLine(j);
         }
         
@@ -110,53 +115,27 @@ public class DoctorController : Controller
     }
     
     
-    static List<string> GetPatientEventsNew(SqliteConnection connection, int? patientId)
+
+    static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, int? patientId, string letter)
     {
-        var query = "SELECT date FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour,name FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);
-        command.Parameters.AddWithValue("@letter", "N");
-        connection.Open();
-        using SqliteDataReader reader = command.ExecuteReader();
-
-        List<string> dates = new List<string>();
-        while (reader.Read())
-        {
-            dates.Add(reader["date"].ToString());
-        }
-
-        connection.Close();
-
-        if (dates.Count > 0)
-        {
-            Console.WriteLine(" a accepter Rendez-vous trouvés : " + string.Join(", ", dates));
-        }
-        else
-        {
-            Console.WriteLine("Aucun rendez-vous trouvé.");
-        }
-        return dates;
-    }
-
-    static List<(string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
-    {
-        var query = "SELECT date,hour FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
-
-        using SqliteCommand command = new SqliteCommand(query, connection);
-        command.Parameters.AddWithValue("@patient", patientId);
-        command.Parameters.AddWithValue("@letter", "A");
+        command.Parameters.AddWithValue("@letter", letter);
         connection.Open();
         
         using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string)> dates = new List<(string,string)>();
+        List<(string,string,string)> dates = new List<(string,string,string)>();
         string date = "";
         string hour = "";
+        string name = "";
         while (reader.Read())
         {
             date=reader["date"].ToString();
             hour = reader["hour"].ToString();
-            dates.Add((date,hour));
+            name = reader["name"].ToString();
+            dates.Add((date,hour,name));
         }
         connection.Close();
         
@@ -184,14 +163,14 @@ public class DoctorController : Controller
     [HttpPost]
     public IActionResult AcceptEvent(int id)
     {
-        var eventToAccept = _context.Appointment.FirstOrDefault(e => e.patient_id == id);
+        var eventToAccept = _context.Appointment.FirstOrDefault(e => e.patient_id == 8);
         if (eventToAccept != null)
         {
-            eventToAccept.valid = "A"; // Suppose que tu as un champ Status
+            eventToAccept.valid = "A"; 
             _context.SaveChanges();
         }
 
-        return RedirectToAction("HomeDoctor"); // Redirection après action
+        return RedirectToAction("HomeDoctor"); 
     }
 
     [HttpPost]

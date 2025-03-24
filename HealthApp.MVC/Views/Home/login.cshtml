@@ -46,6 +46,11 @@
         </div>
         <button type="submit" class="btn btn-primary login-btn">Login</button>
     </form>
+    @if (ViewBag.incorrect == true)
+    {
+        <a href="#" style="text-decoration: none; font-weight: bold; color: red; font-size: 18px;">Incorrect password</a>
+
+    }
 
     <div class="text-center mt-3">
         

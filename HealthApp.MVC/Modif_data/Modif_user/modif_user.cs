@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace hospital.Modif_data
 {
-    public static class ModifUser 
+    public class ModifUser 
     {
         private const string ConnectionString = "Data Source=hospital.db";
 
@@ -35,6 +35,7 @@ namespace hospital.Modif_data
         // Fonction pour insérer un utilisateur dans la table 'users'
         public static void InsertUser(SqliteConnection connection, string firstName ,string lastName, string email,string password)
         {
+            
             int maxId = 0;
             const string max_id = "SELECT MAX(user_id) AS max_id FROM users";
             using (var command = new SqliteCommand(max_id, connection))
@@ -54,22 +55,12 @@ namespace hospital.Modif_data
                 command.Parameters.AddWithValue("@user_password", password);
                 command.Parameters.AddWithValue("@user_role", "P");
                 
+                
                 command.ExecuteNonQuery();
                 Console.WriteLine("Utilisateur inséré avec succès.");
             }
             
-            string queryPatient = "INSERT INTO patient (patient_id, patient_name, patient_last_name,patient_email) VALUES (@patient_id, @patient_name, @patient_last_name, @patient_email);";
-            using (var command2 = new SqliteCommand(queryPatient, connection))
-            {
-                command2.Parameters.AddWithValue("@patient_id", maxId+1);
-                command2.Parameters.AddWithValue("@patient_name", firstName);
-                command2.Parameters.AddWithValue("@patient_last_name", lastName);
-                command2.Parameters.AddWithValue("@patient_email", email);
-                
-
-                command2.ExecuteNonQuery();
-                
-            }
+            
             
             
         }
@@ -101,9 +92,9 @@ namespace hospital.Modif_data
                 {
                     return 2;
                 }
-                return 3; // Autres rôles
+                return 3; // admin
             }
-            return 0; // Aucun utilisateur trouvé
+            return 0; 
         }
 
 

@@ -16,7 +16,7 @@ public class PatientController:Controller
     
     private static List<string> GetDoctorList(SqliteConnection connection, string doctorName, string specialty)
     {
-        var query = "SELECT doctor_last_name FROM doctors WHERE 1=1";
+        var query = "SELECT doctor_last_name, doctor_specialty FROM doctors WHERE 1=1";
     
         if (!string.IsNullOrEmpty(doctorName))
         {
@@ -24,7 +24,7 @@ public class PatientController:Controller
         }
         if (!string.IsNullOrEmpty(specialty))
         {
-            query += " AND specialty = @specialty";
+            query += " AND doctor_specialty = @specialty";
         }
 
         using SqliteCommand command = new SqliteCommand(query, connection);
@@ -46,7 +46,6 @@ public class PatientController:Controller
         {
             lastNames.Add(reader["doctor_last_name"].ToString());
         }
-
         connection.Close();
         return lastNames;
     }
@@ -66,7 +65,7 @@ public class PatientController:Controller
             }
 
             ViewBag.DoctorList = doctorList;
-            return View("DoctorSearch"); // Render the DoctorSearch view with results
+            return View("DoctorSearch");
         }
 
         // If no search criteria are provided, render the Search view
@@ -84,5 +83,17 @@ public class PatientController:Controller
         }
        
     }
+    
+   /* [HttpPost]
+    public ActionResult AjouterRdv(App model)
+    {
+        if (ModelState.IsValid)
+        {
+            rdvList.Add(model);
+            return RedirectToAction("Index"); // Redirection vers la liste après ajout
+        }
+        ViewBag.DoctorList = doctorList;
+        return View("Index", model); // Retourne la vue avec le modèle en cas d'erreur
+    }*/
     
 }

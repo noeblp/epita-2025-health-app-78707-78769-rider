@@ -55,7 +55,9 @@
         <ul class="doctor-list">
             @foreach (var doctor in ViewBag.DoctorList)
             {
-                <li>@doctor</li>
+                <li>
+                    <a href="@Url.Action("BookAppo", "Appointment", new { name = doctor })">@doctor</a>
+                </li>
             }
         </ul>
     }
