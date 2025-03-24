@@ -1,7 +1,117 @@
-
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Book";
+    int year = ViewBag.CurrentYear;
+    int month = ViewBag.CurrentMonth;
+    int week = ViewBag.CurrentWeek;
+    var events = ViewBag.Events as List<hospital.Models.Calendar>;
+    var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
+
+
+}
+<style>
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        z-index: 1050; /* Plus élevé que le reste du contenu */
+    }
+
+    .popup-content {
+        background-color: white;
+        width: 50%;
+        height: 50vh;
+        padding: 20px;
+        border: 2px solid black;
+        box-shadow: 0px 0px 10px gray;
+    }
+</style>
+@if (Context.Session.GetString("user_role") == "D")
+{
+
+    <a class="btn btn-primary text-white fw-bold px-4 py-2"
+       asp-area="" asp-controller="Doctor" asp-action="HomeDoctor">
+        Home
+    </a>
+
+}
+else
+{
+    <a class="btn btn-primary text-white fw-bold px-4 py-2"
+       asp-area="" asp-controller="Home" asp-action="UI_Patient">
+        Home
+    </a>
 }
 
+<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
 
-<a>book</a>
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
+    <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
+        <thead>
+        <tr style="background-color: #f0f0f0; height: 5%">
+            
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday @(startOfWeek.Day)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday @(startOfWeek.Day+1)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday @(startOfWeek.Day+2)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday @(startOfWeek.Day+3)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday @(startOfWeek.Day+4)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday @(startOfWeek.Day+5)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday @(startOfWeek.Day+6)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (int hour = 8; hour <= 18; hour++)
+        {
+            <tr>
+                
+                @for (int i = 0; i < 7; i++)
+                {
+                    var currentDate = startOfWeek.AddDays(i);
+                    var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden; padding: 5px;">
+                        @if (eventToday != null && eventToday.Any())
+                        {
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                unavailable
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                @hour:00
+                            </div>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+
+
+        </tbody>
+    </table>
+</div>
+
+
+@using (Html.BeginForm("OpenModal", "Appointment", FormMethod.Post))
+{
+    <button type="submit">Ouvrir la Popup</button>
+}
+
+@if (ViewData["PopupContent"] != null)
+{
+    @Html.Raw(ViewData["PopupContent"])
+}
+<div style="position: absolute; left: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Previous week </a>
+</div>
+
+<div style="position: absolute; right: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Next week →</a>
+</div>
