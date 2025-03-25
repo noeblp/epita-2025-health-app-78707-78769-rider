@@ -35,7 +35,7 @@
     <h2 class="text-center text-primary fw-bold">Manage Users</h2>
     <p class="text-center text-muted">Update user details</p>
 
-    <form method="post" action="/Home/UpdateUser">
+    <form method="post" action="/Patient/update_user">
         <div class="mb-3">
             <input type="text" name="firstName" class="form-control" placeholder="👤 First Name">
         </div>
@@ -48,6 +48,7 @@
         <div class="mb-3">
             <input type="password" name="password" class="form-control" placeholder="🔑 New Password">
         </div>
+        
         <button type="submit" class="btn btn-primary manage-btn">Update</button>
     </form>
 </div>

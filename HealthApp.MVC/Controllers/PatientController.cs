@@ -72,15 +72,17 @@ public class PatientController:Controller
     }
 
 
-
-    public void Update(string firstname, string lastname, string email, string password)
+    
+    public IActionResult update_user( string name, string lastname, string email,
+        string password)
     {
-        using (var connection = modif_doctors.ConnectToDatabase())
+        Console.WriteLine("updateuser called IN PATIENT CONTROLLER!");
+        using (var connection = ModifUser.ConnectToDatabase())
         {
-           // modif_patient.UpdateUser(connection, firstname, lastname, email, password);
+            ModifUser.update_user(connection, name, lastname, email, password);
             
         }
-       
+        return RedirectToAction("UI_patient", "Home");
     }
     
    

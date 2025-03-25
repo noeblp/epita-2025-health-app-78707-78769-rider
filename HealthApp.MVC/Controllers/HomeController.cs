@@ -65,7 +65,7 @@ public class HomeController : Controller
         return RedirectToAction("HomeDoctor","Doctor");
     }
 
-    public IActionResult UI_Patient()
+    public IActionResult UI_patient()
     {
         return View();
     }
