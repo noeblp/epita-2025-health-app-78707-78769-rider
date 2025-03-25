@@ -92,8 +92,6 @@ public class HomeController : Controller
     public void push_patient(int id,string email,string role)
     {
         HttpContext.Session.SetInt32("user_id", id);
-        HttpContext.Session.SetString("user_first_name", email);
-        HttpContext.Session.SetString("user_last_name", email);
         HttpContext.Session.SetString("user_email", email);
         HttpContext.Session.SetString("user_role", role);
     }

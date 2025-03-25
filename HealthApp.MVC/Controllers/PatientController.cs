@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using hospital.Modif_data;
-using hospital.Views.Patient;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 
 namespace hospital.Controllers;
 
@@ -84,16 +83,6 @@ public class PatientController:Controller
        
     }
     
-   /* [HttpPost]
-    public ActionResult AjouterRdv(App model)
-    {
-        if (ModelState.IsValid)
-        {
-            rdvList.Add(model);
-            return RedirectToAction("Index"); // Redirection vers la liste après ajout
-        }
-        ViewBag.DoctorList = doctorList;
-        return View("Index", model); // Retourne la vue avec le modèle en cas d'erreur
-    }*/
+   
     
 }

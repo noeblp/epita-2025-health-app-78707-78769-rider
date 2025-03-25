@@ -10,29 +10,6 @@
 
 
 }
-<style>
-    .popup-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        z-index: 1050; /* Plus élevé que le reste du contenu */
-    }
-
-    .popup-content {
-        background-color: white;
-        width: 50%;
-        height: 50vh;
-        padding: 20px;
-        border: 2px solid black;
-        box-shadow: 0px 0px 10px gray;
-    }
-</style>
 @if (Context.Session.GetString("user_role") == "D")
 {
 
@@ -50,7 +27,7 @@ else
     </a>
 }
 
-<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
+<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy").</h2>
 
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
     <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
@@ -84,8 +61,8 @@ else
                         }
                         else
                         {
-                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                @hour:00
+                            <div class="container" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                 <a asp-area="" asp-controller="Appointment" asp-action="Popup">@hour:00</a>
                             </div>
                         }
                     </td>
@@ -99,15 +76,7 @@ else
 </div>
 
 
-@using (Html.BeginForm("OpenModal", "Appointment", FormMethod.Post))
-{
-    <button type="submit">Ouvrir la Popup</button>
-}
 
-@if (ViewData["PopupContent"] != null)
-{
-    @Html.Raw(ViewData["PopupContent"])
-}
 <div style="position: absolute; left: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
     <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Previous week </a>
 </div>

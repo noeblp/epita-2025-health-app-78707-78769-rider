@@ -1,15 +1,31 @@
 using System;
 using System.Collections.Generic;
+using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
+using Appointments = HealthApp.Razor.Data.Appointments;
 
 namespace hospital.Controllers;
 
 public class AppointmentController:Controller
 {
+    
+    private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
+    
+
+    public AppointmentController(ILogger<HomeController> logger, ApplicationDbContext context)
+    {
+        _logger = logger;
+        _context = context;
+        _context.Database.EnsureCreated();
+        
+        
+    }
     public IActionResult BookAppo(int? year, int? month, int? week)
     {
         int currentYear = year ?? DateTime.Now.Year;
@@ -101,11 +117,14 @@ public class AppointmentController:Controller
     }
     
     [HttpPost]
-    public ActionResult OpenModal()
+    public void SubmitAppo(string date, string name,string hour)
     {
-        // On définit un ViewBag pour signaler que la fenêtre doit être affichée
-        ViewBag.ShowModal = true;
-        return View("Popup"); // Renvoie à la vue avec la mini-fenêtre ouverte
+        //remplacer doctor par l'id 
+        _context.Appointment.Add(new Appointments
+            { doctor_id = "marche", patient_id = 8, date = date ,valid = "N", hour=hour,name = name});
+        _context.SaveChanges();
+
+
     }
     
     

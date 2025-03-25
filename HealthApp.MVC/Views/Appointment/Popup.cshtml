@@ -4,25 +4,16 @@
 
 <h2>Ma Page</h2>
 
-<!-- Le bouton pour ouvrir la mini-fenêtre -->
-<form method="post" action="@Url.Action("Popup", "Appointment")">
-    <button type="submit">Ouvrir la fenêtre</button>
-</form>
-
-<!-- Fenêtre modale -->
-@* Cette fenêtre est par défaut cachée. *@
-@if (ViewBag.ShowModal != null && (bool)ViewBag.ShowModal)
-{
-    <div id="modal" style="position: fixed; top: 20%; left: 20%; width: 60%; height: 60%; background-color: white; border: 2px solid black; z-index: 1000; padding: 20px;">
-        <h3>Mini Fenêtre</h3>
-        <p>Contenu de la fenêtre</p>
-        <form method="post" action="@Url.Action("CloseModal", "Home")">
-            <button type="submit">Fermer</button>
-        </form>
+<form method="post" action="/Appointment/SubmitAppo">
+    <div class="mb-3">
+        <input type="text" name="date" class="form-control" placeholder="date" required>
     </div>
-}
-
-<!-- Le fond de la page reste inchangé -->
-<div style="z-index: -1;">
-    <p>Le reste de la page...</p>
-</div>
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="name" required>
+    </div>
+    <div class="mb-3">
+        <input type="text" name="hour" class="form-control" placeholder="" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary login-btn">Login</button>
+</form>

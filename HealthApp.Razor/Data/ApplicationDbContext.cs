@@ -22,10 +22,14 @@ public class Patients
 public class Appointments
 {
     [Key]
-    public string doctors { get; set; }
+    public string doctor_id { get; set; }
     public int patient_id { get; set; }
     public string date { get; set; }
     public string valid { get; set; }
+    public string hour { get; set; }
+    
+    public string name { get; set; }
+    
 }
 public class ApplicationDbContext : IdentityDbContext
 {
