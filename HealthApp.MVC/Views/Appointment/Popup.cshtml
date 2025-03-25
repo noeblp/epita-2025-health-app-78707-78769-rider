@@ -4,16 +4,9 @@
 
 <h2>Ma Page</h2>
 
-<form method="post" action="/Appointment/SubmitAppo">
-    <div class="mb-3">
-        <input type="text" name="date" class="form-control" placeholder="date" required>
-    </div>
-    <div class="mb-3">
-        <input type="text" name="name" class="form-control" placeholder="name" required>
-    </div>
-    <div class="mb-3">
-        <input type="text" name="hour" class="form-control" placeholder="" required>
-    </div>
-    
-    <button type="submit" class="btn btn-primary login-btn">Login</button>
+<form asp-controller="Appointment" asp-action="SubmitAppo" method="post">
+    <input type="hidden" name="hour" value="@ViewBag.SelectedHour" />
+    <input type="text" name="name" placeholder="Nom" required />
+    <input type="date" name="date" value="@ViewBag.SelectedDate"/>
+    <button type="submit">Envoyer</button>
 </form>

@@ -28,6 +28,7 @@ public class AppointmentController:Controller
     }
     public IActionResult BookAppo(int? year, int? month, int? week)
     {
+        
         int currentYear = year ?? DateTime.Now.Year;
         int currentMonth = month ?? DateTime.Now.Month;
 
@@ -111,20 +112,41 @@ public class AppointmentController:Controller
         return dates;
     }
 
-    public IActionResult Popup()
+    private string hours;
+
+    public IActionResult Popup(int hour, int date, int month,int year)
     {
+        TempData["SelectedHour"] = hour.ToString();
+        TempData["SelectedDate"] = date.ToString();
+        TempData["SelectedMonth"] = month.ToString();
+        TempData["SelectedYear"] = year.ToString();
         return View();
     }
     
+    
     [HttpPost]
-    public void SubmitAppo(string date, string name,string hour)
+    public IActionResult SubmitAppo(string date, string name,string hour)
     {
-        //remplacer doctor par l'id 
+        string? hours = TempData["SelectedHour"] as string;
+        string? dates = TempData["SelectedDate"] as string;
+        string? months = TempData["SelectedMonth"] as string;
+        //months = int.Parse(months).ToString("D2");
+        string? years = TempData["SelectedYear"] as string;
+        string? final_date=dates+"/"+months+"/"+years;
         _context.Appointment.Add(new Appointments
-            { doctor_id = "marche", patient_id = 8, date = date ,valid = "N", hour=hour,name = name});
+            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours ,name = name});
         _context.SaveChanges();
+        return RedirectToAction("BookAppo");
+    }
 
-
+    
+    public IActionResult Init(int hour, int date, int month,int year)
+    {
+        TempData["SelectedHour"] = hour.ToString();
+        TempData["SelectedDate"] = date.ToString();
+        TempData["SelectedMonth"] = month.ToString();
+        TempData["SelectedYear"] = year.ToString();
+        return RedirectToAction("BookAppo");    
     }
     
     
