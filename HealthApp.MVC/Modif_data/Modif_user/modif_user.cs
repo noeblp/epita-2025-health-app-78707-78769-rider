@@ -141,7 +141,7 @@ namespace hospital.Modif_data
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@lastname", lastname);
                 command.Parameters.AddWithValue("@password", password);
-                command.Parameters.AddWithValue("@email", email); // Assuming email is the unique identifier
+                command.Parameters.AddWithValue("@email", email); 
 
                 connection.Open();
                 command.ExecuteNonQuery();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using hospital.Modif_data;
 
@@ -73,8 +74,7 @@ public class PatientController:Controller
 
 
     
-    public IActionResult update_user( string name, string lastname, string email,
-        string password)
+    public IActionResult Update_user( string name, string lastname, string email, string password)
     {
         Console.WriteLine("updateuser called IN PATIENT CONTROLLER!");
         using (var connection = ModifUser.ConnectToDatabase())
