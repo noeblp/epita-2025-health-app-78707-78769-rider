@@ -64,6 +64,7 @@ public class PatientController:Controller
             }
 
             ViewBag.DoctorList = doctorList;
+            ViewBag.doctorName = doctorName;
             return View("DoctorSearch");
         }
 

@@ -23,8 +23,8 @@
 
         <h3 class="text-center">Book an Appointment</h3>
         <form asp-controller="Appointment" asp-action="SubmitAppo" method="post">
-            <input type="hidden" name="hour" value="@ViewBag.SelectedHour" />
-            <input type="hidden" name="date" value="@ViewBag.SelectedDate" />
+            <input type="text" name="hour" value="@ViewBag.SelectedHour" />
+            <input type="text" name="date" value="@ViewBag.SelectedDate" />
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" id="name" name="name" class="form-control" placeholder="Your name" required />

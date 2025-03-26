@@ -158,12 +158,10 @@ public class DoctorController : Controller
     [HttpPost]
     public IActionResult DeclineEvent(int id)
     {
-        var eventToDecline = _context.Appointment.FirstOrDefault(e => e.appo_id == id);
-        if (eventToDecline != null)
-        {
-            eventToDecline.valid = "D"; 
-            _context.SaveChanges();
-        }
+        Console.WriteLine("id " + id);
+    
+        string sql = "UPDATE Appointment SET valid = 'D' WHERE appo_id = @p0";
+        _context.Database.ExecuteSqlRaw(sql, id);
 
         return RedirectToAction("HomeDoctor"); 
     }

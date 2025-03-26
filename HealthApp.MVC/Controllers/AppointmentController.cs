@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
@@ -28,7 +29,14 @@ public class AppointmentController:Controller
     }
     public IActionResult BookAppo(int? year, int? month, int? week)
     {
-        
+       /* if (TempData["SelectedHour"]!=null){ViewBag.SelectedHour = ViewBag.SelectedHours+":00";}
+        if (TempData["SelectedHour"] != null)
+        {
+            ViewBag.SelectedDate = TempData["SelectedDate"] + "/" + TempData["SelectedMonth"] + "/" +
+                                   TempData["SelectedYear"];
+        }*/
+
+       
         int currentYear = year ?? DateTime.Now.Year;
         int currentMonth = month ?? DateTime.Now.Month;
 
@@ -130,6 +138,7 @@ public class AppointmentController:Controller
         string? hours = TempData["SelectedHour"] as string;
         string? dates = TempData["SelectedDate"] as string;
         string? months = TempData["SelectedMonth"] as string;
+        
         if (!string.IsNullOrEmpty(months))
         {
             months = int.Parse(months).ToString("D2");
@@ -139,19 +148,24 @@ public class AppointmentController:Controller
             hours = int.Parse(hours).ToString("D2");
         }
         string? years = TempData["SelectedYear"] as string;
-        
         string? final_date=dates+"/"+months+"/"+years;
-        //add appo_id
+        
+        
+        int max =_context.Appointment.Max(a=>a.appo_id);
         
         _context.Appointment.Add(new Appointments
-            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours+":00" ,name = name});
+            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours+":00" ,name = name,appo_id = max+1});
         _context.SaveChanges();
+        ViewBag.SelectHours = hour;
+        ViewBag.SelectDate = date;
+        
         return RedirectToAction("BookAppo");
     }
 
     
     public IActionResult Init(int hour, int date, int month,int year)
     {
+        
         TempData["SelectedHour"] = hour.ToString();
         TempData["SelectedDate"] = date.ToString();
         TempData["SelectedMonth"] = month.ToString();
