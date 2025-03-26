@@ -19,11 +19,21 @@ public class Patients
     public string patient_last_name { get; set; }
     public string patient_email { get; set; }
 }
+
+public class Doctor
+{
+    [Key]
+    public int doctor_id { get; set; }
+    public string doctor_first_name { get; set; }
+    public string doctor_last_name { get; set; }
+    public string doctor_email { get; set; }
+    public string doctor_specialty { get; set; }
+}
 public class Appointments
 {
     [Key]
-    public string doctor_id { get; set; }
-    public int patient_id { get; set; }
+    public int? doctor_id { get; set; }
+    public int? patient_id { get; set; }
     public string date { get; set; }
     public string valid { get; set; }
     public string hour { get; set; }
@@ -45,5 +55,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Appointments> Appointment { get; set; }
 
     public DbSet<Patients> Patient { get; set; }
+    
+    public DbSet<Doctor> Doctors { get; set; }
     
 }

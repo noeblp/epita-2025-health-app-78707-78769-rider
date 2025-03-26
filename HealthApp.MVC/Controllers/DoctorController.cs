@@ -116,7 +116,7 @@ public class DoctorController : Controller
 
     static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId, string letter)
     {
-        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);

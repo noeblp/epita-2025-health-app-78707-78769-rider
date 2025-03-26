@@ -27,7 +27,7 @@ public class AppointmentController:Controller
         
         
     }
-    public IActionResult BookAppo(int? year, int? month, int? week, int? doctorId)
+    public IActionResult BookAppo(int? year, int? month, int? week, int doctorId)
     {
         if (TempData["SelectedHour"]!=null){ViewBag.SelectedHour = HttpContext.Session.GetString("SelectedHour")+":00";}
         if (TempData["SelectedHour"] != null)
@@ -37,6 +37,20 @@ public class AppointmentController:Controller
                                    HttpContext.Session.GetString("SelectedYear");
 
         }
+
+
+
+        var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == doctorId);
+        ViewBag.DoctorName = doc.doctor_last_name;
+        ViewBag.DoctorSpecialty = doc.doctor_specialty;
+        
+
+        if (HttpContext.Session.GetInt32("doctor_id") == null)
+        {
+            HttpContext.Session.SetInt32("doctor_id",doctorId);
+        }
+        
+        
 
        
         int currentYear = year ?? DateTime.Now.Year;
@@ -97,7 +111,7 @@ public class AppointmentController:Controller
     static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
     {
         var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
-
+        
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);
         command.Parameters.AddWithValue("@letter", "A");
@@ -137,10 +151,13 @@ public class AppointmentController:Controller
     [HttpPost]
     public IActionResult SubmitAppo(string date, string name,string hour)
     {
+        int? doctorid = HttpContext.Session.GetInt32("doctor_id");
+        int? patient_id = HttpContext.Session.GetInt32("user_id");
         string? hours = HttpContext.Session.GetString("SelectedHour");
         string? dates = TempData["SelectedDate"] as string;
         string? months = TempData["SelectedMonth"] as string;
         string? years = TempData["SelectedYear"] as string;
+        
         
         if (!string.IsNullOrEmpty(months))
         {
@@ -157,11 +174,12 @@ public class AppointmentController:Controller
         int max =_context.Appointment.Max(a=>a.appo_id);
         
         _context.Appointment.Add(new Appointments
-            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours+":00" ,name = name,appo_id = max+1});
+            { doctor_id = doctorid, patient_id = patient_id, date = final_date ,valid = "N", hour= hours+":00" ,name = name,appo_id = max+1});
         _context.SaveChanges();
         
         
-        return RedirectToAction("BookAppo");
+        
+        return RedirectToAction("BookAppo","Appointment",new { doctorid = doctorid });
     }
 
     
