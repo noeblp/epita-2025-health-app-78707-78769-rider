@@ -42,7 +42,7 @@ public class AppointmentController:Controller
             
 
             
-        List<(string,string,string)> res;
+        List<(string,string,string,int)> res;
         int? userId = HttpContext.Session.GetInt32("user_id");
         using (var connection = ModifUser.ConnectToDatabase())
         {
@@ -54,18 +54,16 @@ public class AppointmentController:Controller
 
         foreach (var c in res)
         {
-            (string,string,string) dateStr = c; 
+            (string,string,string,int) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
             int a = date.Year;
             DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
-            Console.WriteLine("jour=" +jour);
             int h = jour.Hour;
             int ms = jour.Minute;
-            Console.WriteLine("hour = " + h+" minute"+ms);
             
-            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id = dateStr.Item4});
             Console.WriteLine(j);
         }
             
@@ -86,9 +84,9 @@ public class AppointmentController:Controller
         return (date.Day + (int)firstDay.DayOfWeek - 1) / 7 + 1;
     }
     
-    static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
+    static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
     {
-        var query = "SELECT date,hour,name FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);
@@ -96,16 +94,18 @@ public class AppointmentController:Controller
         connection.Open();
         
         using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string,string)> dates = new List<(string,string,string)>();
+        List<(string,string,string,int)> dates = new List<(string,string,string,int)>();
         string date = "";
         string hour = "";
         string name = "";
+        int appo_id = 0;
         while (reader.Read())
         {
             date=reader["date"].ToString();
             hour = reader["hour"].ToString();
             name = reader["name"].ToString();
-            dates.Add((date,hour,name));
+            appo_id = int.Parse(reader["appo_id"].ToString());
+            dates.Add((date,hour,name,appo_id));
         }
         connection.Close();
         
@@ -130,11 +130,21 @@ public class AppointmentController:Controller
         string? hours = TempData["SelectedHour"] as string;
         string? dates = TempData["SelectedDate"] as string;
         string? months = TempData["SelectedMonth"] as string;
-        //months = int.Parse(months).ToString("D2");
+        if (!string.IsNullOrEmpty(months))
+        {
+            months = int.Parse(months).ToString("D2");
+        }
+        if (!string.IsNullOrEmpty(hours))
+        {
+            hours = int.Parse(hours).ToString("D2");
+        }
         string? years = TempData["SelectedYear"] as string;
+        
         string? final_date=dates+"/"+months+"/"+years;
+        //add appo_id
+        
         _context.Appointment.Add(new Appointments
-            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours ,name = name});
+            { doctor_id = "marche", patient_id = 8, date = final_date ,valid = "N", hour= hours+":00" ,name = name});
         _context.SaveChanges();
         return RedirectToAction("BookAppo");
     }

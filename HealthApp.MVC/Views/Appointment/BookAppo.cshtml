@@ -7,92 +7,74 @@
     int week = ViewBag.CurrentWeek;
     var events = ViewBag.Events as List<hospital.Models.Calendar>;
     var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
-
-
-}
-@if (Context.Session.GetString("user_role") == "D")
-{
-
-    <a class="btn btn-primary text-white fw-bold px-4 py-2"
-       asp-area="" asp-controller="Doctor" asp-action="HomeDoctor">
-        Home
-    </a>
-
-}
-else
-{
-    <a class="btn btn-primary text-white fw-bold px-4 py-2"
-       asp-area="" asp-controller="Home" asp-action="UI_Patient">
-        Home
-    </a>
 }
 
-
-
-<form asp-controller="Appointment" asp-action="SubmitAppo" method="post">
-    <input type="hidden" name="hour" value="@ViewBag.SelectedHour" />
-    <input type="text" name="name" placeholder="Nom" required />
-    <input type="hidden" name="date" value="@ViewBag.SelectedDate"/>
-    <button type="submit">Envoyer</button>
-</form>
-
-<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy").</h2>
-
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
-    <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
-        <thead>
-        <tr style="background-color: #f0f0f0; height: 5%">
-            
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday @(startOfWeek.Day)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday @(startOfWeek.Day+1)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday @(startOfWeek.Day+2)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday @(startOfWeek.Day+3)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday @(startOfWeek.Day+4)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday @(startOfWeek.Day+5)</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday @(startOfWeek.Day+6)</th>
-        </tr>
-        </thead>
-        <tbody>
-        @for (int hour = 8; hour <= 18; hour++)
+<div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px; padding: 20px;">
+    <!-- Booking Form -->
+    <div style="width: 300px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        @if (Context.Session.GetString("user_role") == "D")
         {
-            <tr>
-                
-                @for (int i = 0; i < 7; i++)
-                {
-                    var currentDate = startOfWeek.AddDays(i);
-                    var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
-                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden; padding: 5px;">
-                        @if (eventToday != null && eventToday.Any())
-                        {
-                            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                unavailable
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="container" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                                <a asp-area="" asp-controller="Appointment" asp-action="Init" asp-route-hour="@hour" asp-route-date="@currentDate.Day" asp-route-month="@currentDate.Month" asp-route-year="@currentDate.Year">
-                                    @hour:00
-                                </a>
-                            </div>
-
-                        }
-                    </td>
-                }
-            </tr>
+            <a class="btn btn-primary text-white fw-bold w-100 mb-3" asp-controller="Doctor" asp-action="HomeDoctor">Home</a>
+        }
+        else
+        {
+            <a class="btn btn-primary text-white fw-bold w-100 mb-3" asp-controller="Home" asp-action="UI_Patient">Home</a>
         }
 
+        <h3 class="text-center">Book an Appointment</h3>
+        <form asp-controller="Appointment" asp-action="SubmitAppo" method="post">
+            <input type="hidden" name="hour" value="@ViewBag.SelectedHour" />
+            <input type="hidden" name="date" value="@ViewBag.SelectedDate" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Your name" required />
+            </div>
+            <button type="submit" class="btn btn-success w-100">Submit</button>
+        </form>
+    </div>
 
-        </tbody>
-    </table>
+    <!-- Calendar -->
+    <div style="flex: 1;">
+        <h2 class="text-center">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        <th>@startOfWeek.AddDays(i).ToString("dddd dd")</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (int hour = 8; hour <= 18; hour++)
+                {
+                    <tr>
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            var currentDate = startOfWeek.AddDays(i);
+                            var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                            <td>
+                                @if (eventToday != null && eventToday.Any())
+                                {
+                                    <span class="text-danger">Unavailable</span>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-primary" asp-controller="Appointment" asp-action="Init" asp-route-hour="@hour" asp-route-date="@currentDate.Day" asp-route-month="@currentDate.Month" asp-route-year="@currentDate.Year">
+                                        @hour:00
+                                    </a>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-
-
-<div style="position: absolute; left: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Previous week </a>
-</div>
-
-<div style="position: absolute; right: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Next week →</a>
+<!-- Navigation Buttons -->
+<div class="d-flex justify-content-between mt-3 px-3">
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week - 1 })" class="btn btn-outline-dark">← Previous Week</a>
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week + 1 })" class="btn btn-outline-dark">Next Week →</a>
 </div>

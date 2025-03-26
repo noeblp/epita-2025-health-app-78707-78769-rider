@@ -6,9 +6,6 @@ using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Appointments = hospital.Models.Appointments;
-using HealthApp.Razor.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 
 namespace hospital.Controllers;

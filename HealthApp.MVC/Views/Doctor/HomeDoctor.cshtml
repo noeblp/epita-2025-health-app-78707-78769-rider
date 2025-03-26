@@ -124,12 +124,12 @@
                         {
                             @foreach (var evt in eventToday)
                             {
-                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title</div>
+                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title,@evt.appo_id</div>
                                 <div style="margin-top: 5px; padding: 5px; border: 1px solid gray; background-color: #f8f8f8; border-radius: 5px;">
 
                                     <!-- Formulaire pour accepter -->
                                     <form method="post" asp-controller="Doctor" asp-action="AcceptEvent">
-                                        <input type="hidden" name="id" value="@evt.user_Id" />
+                                        <input type="hidden" name="id" value="@evt.appo_id" />
                                         <button type="submit" style="background-color: green; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer;">
                                             Accepter
                                         </button>
@@ -137,7 +137,7 @@
 
                                     <!-- Formulaire pour refuser -->
                                     <form method="post" asp-controller="Doctor" asp-action="DeclineEvent">
-                                        <input type="hidden" name="id" value="@evt.user_Id" />
+                                        <input type="hidden" name="id" value="@evt.appo_id" />
                                         <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
                                             Refuser
                                         </button>

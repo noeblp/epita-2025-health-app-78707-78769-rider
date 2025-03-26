@@ -10,5 +10,7 @@ namespace hospital.Models
         
         
         public string Status { get; set; }
+        
+        public int appo_id { get; set; }
     }
 }
