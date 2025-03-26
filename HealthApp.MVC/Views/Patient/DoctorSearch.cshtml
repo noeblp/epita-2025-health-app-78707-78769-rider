@@ -53,10 +53,10 @@
     @if (ViewBag.DoctorList != null && ViewBag.DoctorList.Count > 0)
     {
         <ul class="doctor-list">
-            @foreach (var doctor in ViewBag.DoctorList)
+            @for (int i = 0; i < ViewBag.DoctorList.Count; i++)
             {
                 <li>
-                    <a href="@Url.Action("BookAppo", "Appointment", new { name = doctor })">@doctor</a>
+                    <a href="@Url.Action("BookAppo", "Appointment", new { doctorId = @ViewBag.DoctorId[i] })"> @ViewBag.DoctorList[i], @ViewBag.DoctorId[i]</a>
                 </li>
             }
         </ul>

@@ -27,7 +27,7 @@ public class AppointmentController:Controller
         
         
     }
-    public IActionResult BookAppo(int? year, int? month, int? week)
+    public IActionResult BookAppo(int? year, int? month, int? week, int? doctorId)
     {
         if (TempData["SelectedHour"]!=null){ViewBag.SelectedHour = HttpContext.Session.GetString("SelectedHour")+":00";}
         if (TempData["SelectedHour"] != null)
@@ -56,7 +56,7 @@ public class AppointmentController:Controller
         int? userId = HttpContext.Session.GetInt32("user_id");
         using (var connection = ModifUser.ConnectToDatabase())
         {
-            res =GetPatientEvents(connection,userId);
+            res =GetPatientEvents(connection,doctorId);
         }
 
 
@@ -96,7 +96,7 @@ public class AppointmentController:Controller
     
     static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
     {
-        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);

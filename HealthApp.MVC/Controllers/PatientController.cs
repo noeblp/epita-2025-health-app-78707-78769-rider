@@ -13,9 +13,9 @@ public class PatientController:Controller
         return View();
     }
     
-    private static List<string> GetDoctorList(SqliteConnection connection, string doctorName, string specialty)
+    private static (List<string>,List<int>) GetDoctorList(SqliteConnection connection, string doctorName, string specialty)
     {
-        var query = "SELECT doctor_last_name, doctor_specialty FROM doctors WHERE 1=1";
+        var query = "SELECT doctor_last_name, doctor_specialty,doctor_id FROM doctors WHERE 1=1";
     
         if (!string.IsNullOrEmpty(doctorName))
         {
@@ -41,12 +41,14 @@ public class PatientController:Controller
         using SqliteDataReader reader = command.ExecuteReader();
 
         List<string> lastNames = new List<string>();
+        List<int> doctorIds = new List<int>();
         while (reader.Read())
         {
             lastNames.Add(reader["doctor_last_name"].ToString());
+            doctorIds.Add(int.Parse(reader["doctor_id"].ToString()));
         }
         connection.Close();
-        return lastNames;
+        return (lastNames,doctorIds);
     }
     
     
@@ -54,16 +56,18 @@ public class PatientController:Controller
     public IActionResult Search(string doctorName = null, string specialty = null)
     {
         List<string> doctorList = new List<string>();
+        List<int> doctorId = new List<int>();
 
         // Only query the database if either doctorName or specialty is provided
         if (!string.IsNullOrEmpty(doctorName) || !string.IsNullOrEmpty(specialty))
         {
             using (var connection = ModifUser.ConnectToDatabase())
             {
-                doctorList = GetDoctorList(connection, doctorName, specialty);
+                (doctorList,doctorId) = GetDoctorList(connection, doctorName, specialty);
             }
 
             ViewBag.DoctorList = doctorList;
+            ViewBag.DoctorId = doctorId;
             ViewBag.doctorName = doctorName;
             return View("DoctorSearch");
         }
@@ -74,15 +78,7 @@ public class PatientController:Controller
 
 
 
-    public void Update(string firstname, string lastname, string email, string password)
-    {
-        using (var connection = modif_doctors.ConnectToDatabase())
-        {
-           // modif_patient.UpdateUser(connection, firstname, lastname, email, password);
-            
-        }
-       
-    }
+    
     
    
     
