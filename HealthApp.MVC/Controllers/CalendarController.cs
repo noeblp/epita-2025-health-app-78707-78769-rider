@@ -41,7 +41,7 @@ namespace hospital.Controllers
             
 
             
-            List<(string,string,string)> res;
+            List<(string,string,int)> res;
             int? userId = HttpContext.Session.GetInt32("user_id");
             using (var connection = ModifUser.ConnectToDatabase())
             {
@@ -53,7 +53,7 @@ namespace hospital.Controllers
 
             foreach (var c in res)
             {
-                (string,string,string) dateStr = c; 
+                (string,string,int) dateStr = c; 
                 DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
                 int j = date.Day;
                 int m = date.Month;
@@ -61,9 +61,11 @@ namespace hospital.Controllers
                 DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
                 int h = jour.Hour;
                 int ms = jour.Minute;
-            
-                events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
-                Console.WriteLine(j);
+
+                string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
+                string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
+                events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+                
             }
             
 
@@ -85,9 +87,9 @@ namespace hospital.Controllers
         
 
 
-        static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, int? patientId)
+        static List<(string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
         {
-            var query = "SELECT date,hour,name FROM appointment WHERE (patient_id,valid) = (@patient,@letter)";
+            var query = "SELECT date,hour,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
             using SqliteCommand command = new SqliteCommand(query, connection);
             command.Parameters.AddWithValue("@patient", patientId);
@@ -95,15 +97,15 @@ namespace hospital.Controllers
             connection.Open();
         
             using SqliteDataReader reader = command.ExecuteReader();
-            List<(string,string,string)> dates = new List<(string,string,string)>();
+            List<(string,string,int)> dates = new List<(string,string,int)>();
             string date = "";
             string hour = "";
-            string name = "";
+            int name;
             while (reader.Read())
             {
                 date=reader["date"].ToString();
                 hour = reader["hour"].ToString();
-                name = reader["name"].ToString();
+                name = int.Parse(reader["patient_id"].ToString());
                 dates.Add((date,hour,name));
             }
             connection.Close();

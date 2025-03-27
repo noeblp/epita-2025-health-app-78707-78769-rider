@@ -1,0 +1,32 @@
+@model List<Calendar>
+
+<h2 class="text-center">📅 Mes Rendez-vous</h2>
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var rdv in Model)
+        {
+            <div class="col-md-4">
+                <div class="card shadow-lg p-3 mb-4 bg-white rounded" style="transition: 0.3s;">
+                    <div class="card-body">
+                        <h5 class="card-title">👤 @rdv.Date.ToString("HH:mm")</h5>
+                        <p class="card-text">🗓 <strong>@rdv.Date.ToString("dd MMMM yyyy")</strong></p>
+                        <p class="card-text">👨‍⚕️ Docteur: @rdv.Title</p>
+                        <form method="post" asp-controller="Appointment" asp-action="CancelEvent">
+                            <input type="hidden" name="id" value="@rdv.appo_id" />
+                            <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                Refuser
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>

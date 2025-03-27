@@ -53,8 +53,8 @@ public class DoctorController : Controller
             
 
             
-        List<(string,string,string,int)> res;
-        List<(string,string,string,int)> res2;
+        List<(string,string,int,int)> res;
+        List<(string,string,int,int)> res2;
         int? userId = HttpContext.Session.GetInt32("user_id");
         using (var connection = ModifUser.ConnectToDatabase())
         {
@@ -65,10 +65,10 @@ public class DoctorController : Controller
 
         var events = new List<Calendar>();
         var newEvents = new List<Calendar>();
-
+        
         foreach (var c in res)
         {
-            (string,string,string,int) dateStr = c; 
+            (string,string,int,int) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
@@ -76,13 +76,15 @@ public class DoctorController : Controller
             DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
             int h = jour.Hour;
             int ms = jour.Minute;
+            string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
+            string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
             
-            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id =dateStr.Item4 });
+            events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id =dateStr.Item4 });
             
         }
         foreach (var c in res2)
         {
-            (string,string,string,int) dateStr = c; 
+            (string,string,int,int) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
@@ -90,7 +92,9 @@ public class DoctorController : Controller
             DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
             int h = jour.Hour;
             int ms = jour.Minute;
-            newEvents.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id = dateStr.Item4 });
+            string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
+            string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
+            newEvents.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id = dateStr.Item4 });
             
         }
         
@@ -114,9 +118,9 @@ public class DoctorController : Controller
     
     
 
-    static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId, string letter)
+    static List<(string,string,int,int)> GetPatientEvents(SqliteConnection connection, int? patientId, string letter)
     {
-        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
+        var query = "SELECT date,hour,name,appo_id,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
         using SqliteCommand command = new SqliteCommand(query, connection);
         command.Parameters.AddWithValue("@patient", patientId);
@@ -124,16 +128,16 @@ public class DoctorController : Controller
         connection.Open();
         
         using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string,string,int)> dates = new List<(string,string,string,int)>();
+        List<(string,string,int,int)> dates = new List<(string,string,int,int)>();
         string date = "";
         string hour = "";
-        string name = "";
+        int name;
         int appo_id = 0;
         while (reader.Read())
         {
             date=reader["date"].ToString();
             hour = reader["hour"].ToString();
-            name = reader["name"].ToString();
+            name = int.Parse(reader["patient_id"].ToString());
             appo_id = int.Parse(reader["appo_id"].ToString());
             dates.Add((date,hour,name,appo_id));
         }

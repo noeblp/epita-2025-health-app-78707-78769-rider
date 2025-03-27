@@ -7,6 +7,7 @@ using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Appointments = HealthApp.Razor.Data.Appointments;
 
@@ -104,43 +105,14 @@ public class AppointmentController:Controller
         return (date.Day + (int)firstDay.DayOfWeek - 1) / 7 + 1;
     }
     
-    static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
+    public List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
     {
-        var query = "SELECT date,hour,name,appo_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
-        
-        using SqliteCommand command = new SqliteCommand(query, connection);
-        command.Parameters.AddWithValue("@patient", patientId);
-        command.Parameters.AddWithValue("@letter", "A");
-        connection.Open();
-        
-        using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string,string,int)> dates = new List<(string,string,string,int)>();
-        string date = "";
-        string hour = "";
-        string name = "";
-        int appo_id = 0;
-        while (reader.Read())
-        {
-            date=reader["date"].ToString();
-            hour = reader["hour"].ToString();
-            name = reader["name"].ToString();
-            appo_id = int.Parse(reader["appo_id"].ToString());
-            dates.Add((date,hour,name,appo_id));
-        }
-        connection.Close();
-        
-        return dates;
-    }
-
-    private string hours;
-
-    public IActionResult Popup(int hour, int date, int month,int year)
-    {
-        TempData["SelectedHour"] = hour.ToString();
-        TempData["SelectedDate"] = date.ToString();
-        TempData["SelectedMonth"] = month.ToString();
-        TempData["SelectedYear"] = year.ToString();
-        return View();
+        var appointments = _context.Appointment
+            .Where(a => a.doctor_id == patientId && a.valid == "A")
+            .Select(a => new { a.date, a.hour, a.name, a.appo_id })
+            .ToList();
+    
+        return appointments.Select(a => (a.date, a.hour, a.name, a.appo_id)).ToList();
     }
     
     
@@ -192,6 +164,62 @@ public class AppointmentController:Controller
         HttpContext.Session.SetString("SelectedYear", TempData["SelectedYear"]?.ToString());
 
         return RedirectToAction("BookAppo");    
+    }
+
+
+
+    public IActionResult FuturAppo()
+    {
+        
+        int? doc_id=HttpContext.Session.GetInt32("user_id");
+        Console.WriteLine("doc_id= "+doc_id);
+        var appointments = _context.Appointment
+            .Where(a => a.patient_id == doc_id && a.valid == "A")
+            .Select(a => new { a.date, a.hour, a.name, a.appo_id,a.doctor_id })
+            .ToList();
+    
+         appointments.Select(a => (a.date, a.hour, a.name, a.appo_id,a.doctor_id)).ToList();
+        
+         
+         var rdvs = new List<Calendar>();
+         foreach (var a in appointments)
+         {
+             Console.WriteLine("date = "+a.hour);
+             DateTime date = DateTime.ParseExact(a.date, "dd/MM/yyyy", null);
+             int j = date.Day;
+             int m = date.Month;
+             int y = date.Year;
+             DateTime hour = DateTime.ParseExact(a.hour, "HH:mm", null);
+             int h = hour.Hour;
+             int ms = hour.Minute;
+
+
+             var doctorLastName = _context.Doctors
+                 .Where(d => d.doctor_id == a.doctor_id)
+                 .Select(d => d.doctor_last_name)
+                 .FirstOrDefault() ?? " ";
+             
+             rdvs.Add(new Calendar{appo_id = a.appo_id,Date = new DateTime(y,m,j,h,ms,0),Status = "V",Title = doctorLastName, user_Id = 12});
+         } 
+         
+         
+        
+         
+         
+        ViewBag.List = rdvs;
+        return View(rdvs);
+    }
+    
+    
+    [HttpPost]
+    public IActionResult CancelEvent(int id)
+    {
+        Console.WriteLine("id " + id);
+    
+        string sql = "UPDATE Appointment SET valid = 'C' WHERE appo_id = @p0";
+        _context.Database.ExecuteSqlRaw(sql, id);
+        
+        return RedirectToAction("FuturAppo");
     }
     
     

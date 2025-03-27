@@ -137,6 +137,7 @@ public class HomeController : Controller
                 int id = ModifUser.get_id(connection,email);
                 string role = ModifUser.get_role(connection,email);
                 push_patient(id,email,role);
+                HttpContext.Session.SetInt32("doctor_id",id);
                 return RedirectToAction("HomeDoctor","Doctor");
             }
             if (isAuthenticated == 2)

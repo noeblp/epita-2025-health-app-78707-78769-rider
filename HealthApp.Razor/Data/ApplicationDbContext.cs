@@ -43,6 +43,20 @@ public class Appointments
     public int appo_id { get; set; }
     
 }
+
+
+public class User
+{
+    [Key]
+    public int? user_id { get; set; }
+    public string user_first_name { get; set; }
+    public string user_last_name { get; set; }
+    public string user_email { get; set; }
+    public string user_password { get; set; }
+    public string user_role { get; set; }
+    
+    
+}
 public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -57,5 +71,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Patients> Patient { get; set; }
     
     public DbSet<Doctor> Doctors { get; set; }
+    public DbSet<User> Users { get; set; }
     
 }

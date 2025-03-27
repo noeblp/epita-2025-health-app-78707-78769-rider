@@ -95,7 +95,7 @@
                         {
                             @foreach (var evt in eventToday)
                             {
-                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title, @evt.Date</div>
+                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title</div>
                             }
                         }
                     </td>
@@ -124,7 +124,7 @@
                         {
                             @foreach (var evt in eventToday)
                             {
-                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title,@evt.appo_id</div>
+                                <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@evt.Title, @evt.Date.Day/@evt.Date.Month/@evt.Date.Year</div>
                                 <div style="margin-top: 5px; padding: 5px; border: 1px solid gray; background-color: #f8f8f8; border-radius: 5px;">
 
                                     <!-- Formulaire pour accepter -->
