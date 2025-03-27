@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,18 @@ namespace hospital.Controllers
 {
     public class CalendarController : Controller
     {
+        
+        private readonly ApplicationDbContext _context;
+    
+
+        public CalendarController( ApplicationDbContext context)
+        {
+        
+            _context = context;
+            _context.Database.EnsureCreated();
+        
+        
+        }
         public IActionResult Calendar(int? year, int? month, int? week)
         {
             int currentYear = year ?? DateTime.Now.Year;
@@ -46,10 +59,8 @@ namespace hospital.Controllers
                 int m = date.Month;
                 int a = date.Year;
                 DateTime jour = DateTime.ParseExact(dateStr.Item2, "HH:mm", null);
-                Console.WriteLine("jour=" +jour);
                 int h = jour.Hour;
                 int ms = jour.Minute;
-                Console.WriteLine("hour = " + h+" minute"+ms);
             
                 events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
                 Console.WriteLine(j);
@@ -96,7 +107,7 @@ namespace hospital.Controllers
                 dates.Add((date,hour,name));
             }
             connection.Close();
-        
+            
             return dates;
         }
 

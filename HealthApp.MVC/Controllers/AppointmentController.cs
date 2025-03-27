@@ -38,17 +38,13 @@ public class AppointmentController:Controller
 
         }
 
-
-
-        var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == doctorId);
-        ViewBag.DoctorName = doc.doctor_last_name;
-        ViewBag.DoctorSpecialty = doc.doctor_specialty;
-        
-
         if (HttpContext.Session.GetInt32("doctor_id") == null)
         {
             HttpContext.Session.SetInt32("doctor_id",doctorId);
         }
+        var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == HttpContext.Session.GetInt32("doctor_id"));
+        ViewBag.DoctorName = doc.doctor_last_name;
+        ViewBag.DoctorSpecialty = doc.doctor_specialty;
         
         
 
