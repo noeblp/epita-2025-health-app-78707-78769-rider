@@ -168,44 +168,60 @@ public class AppointmentController:Controller
 
 
 
-    public IActionResult FuturAppo()
+    public IActionResult FuturAppo(string doctorFilter, string dateFilter, string statusFilter)
     {
-        
-        int? doc_id=HttpContext.Session.GetInt32("user_id");
-        Console.WriteLine("doc_id= "+doc_id);
+        int? doc_id = HttpContext.Session.GetInt32("user_id");
+        Console.WriteLine("doc_id= " + doc_id);
         var appointments = _context.Appointment
-            .Where(a => a.patient_id == doc_id && a.valid == "A")
-            .Select(a => new { a.date, a.hour, a.name, a.appo_id,a.doctor_id })
+            .Where(a => a.patient_id == doc_id)
+            .Select(a => new { a.date, a.hour, a.name, a.appo_id, a.doctor_id, a.valid })
             .ToList();
     
-         appointments.Select(a => (a.date, a.hour, a.name, a.appo_id,a.doctor_id)).ToList();
-        
-         
-         var rdvs = new List<Calendar>();
-         foreach (var a in appointments)
-         {
-             Console.WriteLine("date = "+a.hour);
-             DateTime date = DateTime.ParseExact(a.date, "dd/MM/yyyy", null);
-             int j = date.Day;
-             int m = date.Month;
-             int y = date.Year;
-             DateTime hour = DateTime.ParseExact(a.hour, "HH:mm", null);
-             int h = hour.Hour;
-             int ms = hour.Minute;
+        var rdvs = new List<Calendar>();
+        foreach (var a in appointments)
+        {
+            DateTime date = DateTime.ParseExact(a.date, "dd/MM/yyyy", null);
+            DateTime hour = DateTime.ParseExact(a.hour, "HH:mm", null);
 
-
-             var doctorLastName = _context.Doctors
-                 .Where(d => d.doctor_id == a.doctor_id)
-                 .Select(d => d.doctor_last_name)
-                 .FirstOrDefault() ?? " ";
-             
-             rdvs.Add(new Calendar{appo_id = a.appo_id,Date = new DateTime(y,m,j,h,ms,0),Status = "V",Title = doctorLastName, user_Id = 12});
-         } 
-         
-         
+            var doctorLastName = _context.Doctors
+                .Where(d => d.doctor_id == a.doctor_id)
+                .Select(d => d.doctor_last_name)
+                .FirstOrDefault() ?? " ";
+            string stat;
+            if (a.valid == "A") stat="validé";
+            else if (a.valid=="N") stat="en attente";
+            else stat="annulé";
+            
         
-         
-         
+            rdvs.Add(new Calendar
+            {
+                appo_id = a.appo_id,
+                Date = new DateTime(date.Year, date.Month, date.Day, hour.Hour, hour.Minute, 0),
+                Status = a.valid,
+                stat = stat,
+                Title = doctorLastName,
+                user_Id = 12
+            });
+        }
+    
+        if (!string.IsNullOrEmpty(doctorFilter))
+        {
+            rdvs = rdvs.Where(r => r.Title == doctorFilter).ToList();
+        }
+    
+        if (!string.IsNullOrEmpty(dateFilter) && DateTime.TryParse(dateFilter, out DateTime selectedDate))
+        {
+            rdvs = rdvs.Where(r => r.Date.Date == selectedDate.Date).ToList();
+        }
+    
+        if (!string.IsNullOrEmpty(statusFilter))
+        {
+            rdvs = rdvs.Where(r => r.Status == statusFilter).ToList();
+        }
+    
+        ViewBag.SelectedDoctor = doctorFilter;
+        ViewBag.SelectedDate = dateFilter;
+        ViewBag.SelectedStatus = statusFilter;
         ViewBag.List = rdvs;
         return View(rdvs);
     }

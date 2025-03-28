@@ -7,6 +7,7 @@ namespace hospital.Models
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public int? user_Id { get; set; }
+        public string? stat { get; set; }
         
         
         public string Status { get; set; }
