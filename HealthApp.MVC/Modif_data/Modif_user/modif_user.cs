@@ -121,17 +121,6 @@ namespace hospital.Modif_data
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
         public static void DeleteAll(SqliteConnection connection)
         {
             string query = "DELETE FROM users;";
@@ -140,6 +129,26 @@ namespace hospital.Modif_data
                 command.ExecuteNonQuery();
                 Console.WriteLine("tout sup");
             }
+        }
+
+        public static void update_user(SqliteConnection connection, string name, string lastname, string email,
+            string password)
+        {
+            string query = "UPDATE users SET user_first_name = @name, user_last_name = @lastname, user_password = @password WHERE user_email = @email";
+            Console.WriteLine("updateuser called!");
+            using (var command = new SqliteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@lastname", lastname);
+                command.Parameters.AddWithValue("@password", password);
+                command.Parameters.AddWithValue("@email", email); 
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+
+            
         }
     }
 }

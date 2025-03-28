@@ -21,9 +21,11 @@ public class AdminController : Controller
 
     public IActionResult AddDoctor()
     {
-        
+        return View();
+    }
 
-        
+    public IActionResult Manage()
+    {
         return View();
     }
 
