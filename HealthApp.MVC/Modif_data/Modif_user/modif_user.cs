@@ -32,38 +32,8 @@ namespace hospital.Modif_data
         
         
 
-        // Fonction pour insérer un utilisateur dans la table 'users'
-        public static void InsertUser(SqliteConnection connection, string firstName ,string lastName, string email,string password)
-        {
-            
-            int maxId = 0;
-            const string max_id = "SELECT MAX(user_id) AS max_id FROM users";
-            using (var command = new SqliteCommand(max_id, connection))
-            {
-                object result = command.ExecuteScalar();
-                maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
-            }
-            
-            
-            string query = "INSERT INTO users (user_id, user_first_name,user_last_name , user_email,user_password,user_role) VALUES (@user_id, @user_first_name, @user_last_name, @user_email, @user_password,@user_role);";
-            using (var command = new SqliteCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@user_id", maxId+1);
-                command.Parameters.AddWithValue("@user_first_name", firstName);
-                command.Parameters.AddWithValue("@user_last_name", lastName);
-                command.Parameters.AddWithValue("@user_email", email);
-                command.Parameters.AddWithValue("@user_password", password);
-                command.Parameters.AddWithValue("@user_role", "P");
-                
-                
-                command.ExecuteNonQuery();
-                Console.WriteLine("Utilisateur inséré avec succès.");
-            }
-            
-            
-            
-            
-        }
+        
+        
 
 
         public static int is_user(SqliteConnection connection, string username, string password)

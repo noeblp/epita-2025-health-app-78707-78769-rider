@@ -99,7 +99,7 @@ public class HomeController : Controller
     {
         using (var connection = ModifUser.ConnectToDatabase())
         {
-                ModifUser.InsertUser(connection, firstName,lastName,email,password);
+                //ModifUser.InsertUser(connection, firstName,lastName,email,password);
                 int maxId = 0;
                 const string max_id = "SELECT MAX(user_id) AS max_id FROM users";
                 using (var command = new SqliteCommand(max_id, connection))
@@ -108,9 +108,20 @@ public class HomeController : Controller
                     maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
                 }
 
+                _context.Users.Add(new User
+                {
+                    user_first_name = firstName,
+                    user_last_name = lastName,
+                    user_email = email,
+                    user_password = password,
+                    user_id = maxId + 1,
+                    user_role = "P"
+                });
+                
+                _context.SaveChanges();
                 _context.Patient.Add(new Patients
                 {
-                    patient_email = email, patient_id = maxId, patient_last_name = lastName, patient_name = firstName
+                    patient_email = email,patient_id = maxId+1,patient_last_name = lastName, patient_name = firstName
                 });
                 
                 

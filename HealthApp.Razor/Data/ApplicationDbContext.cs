@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +12,7 @@ public class Admins
     public int admin_id { get; set; }
 }
 
-public class Patients
-{
-    [Key]
-    public int patient_id { get; set; }
-    public string patient_name { get; set; }
-    public string patient_last_name { get; set; }
-    public string patient_email { get; set; }
-}
+
 
 public class Doctor
 {
@@ -54,8 +48,15 @@ public class User
     public string user_email { get; set; }
     public string user_password { get; set; }
     public string user_role { get; set; }
-    
-    
+}
+
+public class Patients
+{
+    [Key]
+    public int patient_id { get; set; }
+    public string patient_name { get; set; }
+    public string patient_last_name { get; set; }
+    public string patient_email { get; set; }
 }
 public class ApplicationDbContext : IdentityDbContext
 {
