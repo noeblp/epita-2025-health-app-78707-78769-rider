@@ -4,6 +4,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 namespace HealthApp.Razor.Data;
 
 public class Admins
@@ -58,6 +59,14 @@ public class Patients
     public string patient_last_name { get; set; }
     public string patient_email { get; set; }
 }
+
+public class Notification
+{
+    [Key]
+    public int notif_id { get; set; }
+    public int? patient_id { get; set; }
+    public string content { get; set; }
+}
 public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -73,5 +82,7 @@ public class ApplicationDbContext : IdentityDbContext
     
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<User> Users { get; set; }
-    
+
+    public DbSet<Notification> Notifications { get; set; }
+
 }

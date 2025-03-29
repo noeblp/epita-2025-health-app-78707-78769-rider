@@ -151,7 +151,12 @@ public class DoctorController : Controller
     [HttpPost]
     public IActionResult AcceptEvent(int id)
     {
-        Console.WriteLine("id " + id);
+        var appo = _context.Appointment.Where(a => a.appo_id == id).FirstOrDefault();
+        int maxId = _context.Notifications.Max(u => u.notif_id);
+
+
+        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been accepted." });
+        _context.SaveChanges();
     
         string sql = "UPDATE Appointment SET valid = 'A' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);
@@ -162,7 +167,12 @@ public class DoctorController : Controller
     [HttpPost]
     public IActionResult DeclineEvent(int id)
     {
-        Console.WriteLine("id " + id);
+        var appo = _context.Appointment.Where(a => a.appo_id == id).FirstOrDefault();
+        int maxId = _context.Notifications.Max(u => u.notif_id);
+
+
+        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been declined." });
+        _context.SaveChanges();
     
         string sql = "UPDATE Appointment SET valid = 'D' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);

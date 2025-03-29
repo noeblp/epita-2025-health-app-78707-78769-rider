@@ -203,6 +203,7 @@ public class AppointmentController:Controller
                 user_Id = 12
             });
         }
+        
     
         if (!string.IsNullOrEmpty(doctorFilter))
         {
@@ -218,6 +219,7 @@ public class AppointmentController:Controller
         {
             rdvs = rdvs.Where(r => r.Status == statusFilter).ToList();
         }
+        rdvs = rdvs.OrderBy(r => r.Date).ToList();
     
         ViewBag.SelectedDoctor = doctorFilter;
         ViewBag.SelectedDate = dateFilter;
@@ -230,11 +232,19 @@ public class AppointmentController:Controller
     [HttpPost]
     public IActionResult CancelEvent(int id)
     {
-        Console.WriteLine("id " + id);
-    
+        var appo = _context.Appointment.Where(a => a.appo_id == id).FirstOrDefault();
+        int maxId = _context.Notifications.Max(u => u.notif_id);
+
+
+        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been cancelled." });
+        _context.SaveChanges();
+        
+        
+        
+        
+        
         string sql = "UPDATE Appointment SET valid = 'C' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);
-        
         return RedirectToAction("FuturAppo");
     }
     
