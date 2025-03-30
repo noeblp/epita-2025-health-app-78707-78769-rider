@@ -18,7 +18,7 @@ namespace hospital.Controllers
         private readonly ApplicationDbContext _context;
     
 
-        public CalendarController( ApplicationDbContext context)
+        /*public CalendarController( ApplicationDbContext context)
         {
         
             _context = context;
@@ -112,6 +112,6 @@ namespace hospital.Controllers
             
             return dates;
         }
-
+*/
     }
 }

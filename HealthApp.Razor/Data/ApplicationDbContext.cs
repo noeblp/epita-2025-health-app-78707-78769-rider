@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -43,7 +44,7 @@ public class Appointments
 public class User
 {
     [Key]
-    public int? user_id { get; set; }
+    public string user_id { get; set; }
     public string user_first_name { get; set; }
     public string user_last_name { get; set; }
     public string user_email { get; set; }
@@ -54,7 +55,7 @@ public class User
 public class Patients
 {
     [Key]
-    public int patient_id { get; set; }
+    public string patient_id { get; set; }
     public string patient_name { get; set; }
     public string patient_last_name { get; set; }
     public string patient_email { get; set; }
@@ -85,4 +86,14 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Notification> Notifications { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        /*builder.Entity<IdentityRole>().HasData(
+            new IdentityRole { Name = "Patient", NormalizedName = "PATIENT" },
+            new IdentityRole { Name = "Doctor", NormalizedName = "DOCTOR" },
+            new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" }
+        );*/
+    }
 }

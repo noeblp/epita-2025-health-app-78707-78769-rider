@@ -17,6 +17,149 @@ namespace HealthApp.Razor.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
 
+            modelBuilder.Entity("HealthApp.Razor.Data.Admins", b =>
+                {
+                    b.Property<int>("admin_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("admin_id");
+
+                    b.ToTable("Admin");
+                });
+
+            modelBuilder.Entity("HealthApp.Razor.Data.Appointments", b =>
+                {
+                    b.Property<int>("doctor_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("appo_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("date")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("hour")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("patient_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("valid")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("doctor_id");
+
+                    b.ToTable("Appointment");
+                });
+
+            modelBuilder.Entity("HealthApp.Razor.Data.Doctor", b =>
+                {
+                    b.Property<int>("doctor_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("doctor_email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("doctor_first_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("doctor_last_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("doctor_specialty")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("doctor_id");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("HealthApp.Razor.Data.Notification", b =>
+                {
+                    b.Property<int>("notif_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("patient_id")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("notif_id");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("HealthApp.Razor.Data.Patients", b =>
+                {
+                    b.Property<int>("patient_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("patient_email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("patient_last_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("patient_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("patient_id");
+
+                    b.ToTable("Patient");
+                });
+
+            modelBuilder.Entity("HealthApp.Razor.Data.User", b =>
+                {
+                    b.Property<int>("user_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("user_email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("user_first_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("user_last_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("user_password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("user_role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("user_id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -156,9 +299,11 @@ namespace HealthApp.Razor.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -196,9 +341,11 @@ namespace HealthApp.Razor.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")

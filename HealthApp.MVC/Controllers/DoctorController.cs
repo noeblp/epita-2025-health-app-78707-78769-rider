@@ -37,7 +37,7 @@ public class DoctorController : Controller
     
     
 
-    public IActionResult HomeDoctor(int? year, int? month, int? week, int? day)
+    /*public IActionResult HomeDoctor(int? year, int? month, int? week, int? day)
     {
         int currentYear = year ?? DateTime.Now.Year;
         int currentMonth = month ?? DateTime.Now.Month;
@@ -179,7 +179,7 @@ public class DoctorController : Controller
 
         return RedirectToAction("HomeDoctor"); 
     }
-
+*/
     
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

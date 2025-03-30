@@ -1,7 +1,8 @@
 using System;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder; // Assurez-vous que votre namespace est correct
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity; // Assurez-vous que votre namespace est correct
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,11 @@ builder.Services.AddSession(options =>
 // Configurer le DbContext pour utiliser SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
 
 // Créer l'application
 var app = builder.Build();

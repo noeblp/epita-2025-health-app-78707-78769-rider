@@ -1,29 +1,34 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Modif_data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Identity;
 
 namespace hospital.Controllers;
-
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _context;
-    
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context,
+        UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
         _logger = logger;
         _context = context;
+        _userManager = userManager;
+        _signInManager = signInManager;
         _context.Database.EnsureCreated();
-        
-        
     }
 
     public IActionResult Index()
@@ -32,22 +37,20 @@ public class HomeController : Controller
         return View();
     }
 
+    [Authorize(Roles = "PATIENT")]
     public IActionResult Privacy()
     {
-          
         HttpContext.Session.Clear();
-        //send_mail.SendConfirmationEmail("belperin.n@gmail.com","ravus","ravus");
         return View();
     }
-    
-    
+
     public IActionResult Register()
     {
         var userI = HttpContext.Session.GetInt32("user_id");
         var userId = HttpContext.Session.GetString("user_first_name");
         var username = HttpContext.Session.GetString("user_last_name");
         var email = HttpContext.Session.GetString("user_email");
-        Console.WriteLine(userId + "  "+username+ "  " + email+ "  " + userI);
+        Console.WriteLine(userId + "  " + username + "  " + email + "  " + userI);
         return View();
     }
 
@@ -58,15 +61,14 @@ public class HomeController : Controller
 
     public IActionResult Doctors()
     {
-        
-        return RedirectToAction("HomeDoctor","Doctor");
+        return RedirectToAction("HomeDoctor", "Doctor");
     }
 
     public IActionResult UI_patient()
     {
         return View();
     }
-    
+
     public IActionResult UI_doctor()
     {
         return View();
@@ -76,7 +78,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+
     public IActionResult Logout()
     {
         HttpContext.Session.SetString("IsLoggedIn", "true");
@@ -85,106 +87,101 @@ public class HomeController : Controller
         return RedirectToAction("Index");
     }
 
-
-    public void push_patient(int id,string email,string role)
+    public void push_patient(int id, string email, string role)
     {
         HttpContext.Session.SetInt32("user_id", id);
         HttpContext.Session.SetString("user_email", email);
         HttpContext.Session.SetString("user_role", role);
     }
-    
-    
+
     [HttpPost]
-    public void SubmitForm(string firstName, string lastName, string email, string password)
+    public async Task<IActionResult> SubmitForm(string firstName, string lastName, string email, string password)
     {
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-                //ModifUser.InsertUser(connection, firstName,lastName,email,password);
-                int maxId = 0;
-                const string max_id = "SELECT MAX(user_id) AS max_id FROM users";
-                using (var command = new SqliteCommand(max_id, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    maxId = result != DBNull.Value ? Convert.ToInt32(result) : 0;
-                }
+        var user = new IdentityUser { UserName = email, Email = email};
+        var result = await _userManager.CreateAsync(user, password);
+        //int maxId=(int)_context.Users.Max(e => e.user_id);
 
-                _context.Users.Add(new User
-                {
-                    user_first_name = firstName,
-                    user_last_name = lastName,
-                    user_email = email,
-                    user_password = password,
-                    user_id = maxId + 1,
-                    user_role = "P"
-                });
-                
-                _context.SaveChanges();
-                _context.Patient.Add(new Patients
-                {
-                    patient_email = email,patient_id = maxId+1,patient_last_name = lastName, patient_name = firstName
-                });
-                
-                
-                
-                _context.SaveChanges();
-        }
-        
-        
-        
-    }
-    
-    
-    
-    public IActionResult SubmitLogin(string email, string password)
-    {
-       
-        using (var connection = ModifUser.ConnectToDatabase())
+        if (result.Succeeded)
         {
-            int isAuthenticated = ModifUser.is_user(connection, email, password);
+            await _userManager.AddToRoleAsync(user, "PATIENT");
+
+            _context.Users.Add(new User
+            {
+                user_email = user.Email,
+                user_id = user.Id,
+                user_last_name = lastName,
+                user_first_name = firstName,
+                user_password = password,
+                user_role = "P"
+            });
+            await _context.SaveChangesAsync();
+            _context.Patient.Add(new Patients
+            {
+                patient_email = email,
+                patient_id = user.Id,
+                patient_last_name = lastName,
+                patient_name = firstName
+            });
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        
+        foreach (var error in result.Errors)
+        {
+            _logger.LogError($"Error creating user: {error.Description}");
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View("Register");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SubmitLogin(string email, string password)
+    {
+        
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user != null)
+        {
+            var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
             
-            if (isAuthenticated == 1)
+            if (result.Succeeded)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
-                int id = ModifUser.get_id(connection,email);
-                string role = ModifUser.get_role(connection,email);
-                push_patient(id,email,role);
-                HttpContext.Session.SetInt32("doctor_id",id);
-                return RedirectToAction("HomeDoctor","Doctor");
+                
+                var roles = await _userManager.GetRolesAsync(user);
+                string role = roles.Count > 0 ? roles[0] : "Unknown";
+                
+                HttpContext.Session.SetString("UserRole", role);
+                Console.WriteLine("Role: "+role);
+                if (role == "Doctor")
+                {
+                    HttpContext.Session.SetInt32("doctor_id", int.Parse(user.Id));
+                    return RedirectToAction("HomeDoctor", "Doctor");
+                }
+                else if (role == "PATIENT")
+                {
+                    return RedirectToAction("UI_patient");
+                }
+                else if (role == "Admin")
+                {
+                    return RedirectToAction("UI_admin");
+                }
             }
-            if (isAuthenticated == 2)
-            {
-                HttpContext.Session.SetString("IsLoggedIn", "true");
-                int id = ModifUser.get_id(connection,email);
-                string role = ModifUser.get_role(connection,email);
-                push_patient(id,email,role);
-                return RedirectToAction("UI_patient");
-            }
-            if (isAuthenticated == 3)
-            {
-                HttpContext.Session.SetString("IsLoggedIn", "true");
-                int id = ModifUser.get_id(connection,email);
-                push_patient(id,email,"A");
-                return RedirectToAction("UI_admin");
-            }
-            ViewBag.incorrect = true;
-            return View("Login"); 
         }
+        
+        ViewBag.incorrect = true;
+        return View("Login");
     }
 
-    
     public void SubmitDoctors(string firstName, string lastName, string email, string password)
     {
         using (var connection = ModifUser.ConnectToDatabase())
         {
-            //modif_doctors.InsertDoctors(connection, firstName,lastName,email,password);
-               
+            //modif_doctors.InsertDoctors(connection, firstName, lastName, email, password);
         }
     }
-    
-    
-    
-    
-    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
