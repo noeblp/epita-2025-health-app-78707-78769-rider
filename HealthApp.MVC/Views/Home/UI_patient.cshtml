@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Home";
 }
@@ -9,18 +10,17 @@
     </p>
 
     <div class="mt-4">
-        <a class="btn btn-primary btn-lg me-2" asp-controller="Appointments" asp-action="Book">
+        <a class="btn btn-primary btn-lg me-2" asp-controller="Patient" asp-action="Search">
             📅 Book an Appointment
         </a>
-        <a class="btn btn-outline-secondary btn-lg" asp-controller="Doctors" asp-action="Index">
-            🔍 Find a Doctor
+        <a class="btn btn-outline-secondary btn-lg" asp-controller="Appointment" asp-action="FuturAppo">
+            View my futur Appointment
         </a>
+        
+        
     </div>
 
     <div class="mt-5">
-        <p class="text-muted">
-            Learn more about building modern web apps with 
-            <a href="https://learn.microsoft.com/aspnet/core" class="text-decoration-none">ASP.NET Core</a>.
-        </p>
+        
     </div>
 </div>

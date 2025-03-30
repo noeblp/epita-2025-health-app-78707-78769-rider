@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,10 +46,14 @@
         </div>
         <button type="submit" class="btn btn-primary login-btn">Login</button>
     </form>
+    @if (ViewBag.incorrect == true)
+    {
+        <a href="#" style="text-decoration: none; font-weight: bold; color: red; font-size: 18px;">Incorrect password</a>
+
+    }
 
     <div class="text-center mt-3">
         
-        <!---------------------- Modify this line to make forgot password work ---------------------->
         <a href="#" class="text-decoration-none">Forgot Password?</a>
     </div>
     

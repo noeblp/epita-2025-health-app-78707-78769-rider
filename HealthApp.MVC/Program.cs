@@ -1,23 +1,17 @@
+using System;
 using HealthApp.Razor.Data;
-<<<<<<< Updated upstream
-using Microsoft.AspNetCore.Authentication.Cookies; // Assurez-vous que votre namespace est correct
-=======
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity; // Assurez-vous que votre namespace est correct
->>>>>>> Stashed changes
+using Microsoft.AspNetCore.Builder; // Assurez-vous que votre namespace est correct
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Ajouter les services au conteneur.
-
-
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddControllersWithViews();
+
 // Configuration pour la session
 builder.Services.AddSession(options =>
 {

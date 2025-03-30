@@ -1,0 +1,97 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Book";
+    int year = ViewBag.CurrentYear;
+    int month = ViewBag.CurrentMonth;
+    int week = ViewBag.CurrentWeek;
+    var events = ViewBag.Events as List<hospital.Models.Calendar>;
+    var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
+}
+
+<div style="display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 20px; padding: 20px;">
+    <!-- Booking Form -->
+    <div style="width: 300px; background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        @if (Context.Session.GetString("user_role") == "D")
+        {
+            <a class="btn btn-primary text-white fw-bold w-100 mb-3" asp-controller="Doctor" asp-action="HomeDoctor">Home</a>
+        }
+        else
+        {
+            <a class="btn btn-primary text-white fw-bold w-100 mb-3" asp-controller="Home" asp-action="UI_Patient">Home</a>
+        }
+
+        <h3 class="text-center">Book an Appointment</h3>
+        <form asp-controller="Appointment" asp-action="SubmitAppo" method="post" class="p-3 border rounded shadow">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-primary">Hour</label>
+                <input type="text" name="hour" value="@ViewBag.SelectedHour" class="form-control-plaintext" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-primary">Date</label>
+                <input type="text" name="date" value="@ViewBag.SelectedDate" class="form-control-plaintext" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-primary">Doctor Name</label>
+                <input type="text" name="doctorname" value="@ViewBag.DoctorName" class="form-control-plaintext" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-primary">Doctor Specialty</label>
+                <input type="text" name="name" value="@ViewBag.DoctorSpecialty" class="form-control-plaintext" readonly />
+            </div>
+
+            
+
+            <button type="submit" class="btn btn-success w-100">Submit</button>
+        </form>
+
+    </div>
+
+    <!-- Calendar -->
+    <div style="flex: 1;">
+        <h2 class="text-center">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        <th>@startOfWeek.AddDays(i).ToString("dddd dd")</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (int hour = 8; hour <= 18; hour++)
+                {
+                    <tr>
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            var currentDate = startOfWeek.AddDays(i);
+                            var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                            <td>
+                                @if (eventToday != null && eventToday.Any())
+                                {
+                                    <span class="text-danger">Unavailable</span>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-outline-primary" asp-controller="Appointment" asp-action="Init" asp-route-hour="@hour" asp-route-date="@currentDate.Day" asp-route-month="@currentDate.Month" asp-route-year="@currentDate.Year">
+                                        @hour:00
+                                    </a>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Navigation Buttons -->
+<div class="d-flex justify-content-between mt-3 px-3">
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week - 1 })" class="btn btn-outline-dark">← Previous Week</a>
+    <a href="@Url.Action("BookAppo", new { year = year, month = month, week = week + 1 })" class="btn btn-outline-dark">Next Week →</a>
+</div>

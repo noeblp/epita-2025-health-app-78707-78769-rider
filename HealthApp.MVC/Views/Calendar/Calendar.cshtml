@@ -1,3 +1,5 @@
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Calendrier Dynamique";
     int year = ViewBag.CurrentYear;
@@ -5,52 +7,84 @@
     int week = ViewBag.CurrentWeek;
     var events = ViewBag.Events as List<hospital.Models.Calendar>;
     var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
+    
+    
+}
+@if (Context.Session.GetString("user_role") == "D")
+{
+    
+    <a class="btn btn-primary text-white fw-bold px-4 py-2"
+       asp-area="" asp-controller="Doctor" asp-action="HomeDoctor">
+        Home
+    </a>
+    
+}
+else
+{
+    <a class="btn btn-primary text-white fw-bold px-4 py-2"
+       asp-area="" asp-controller="Home" asp-action="UI_Patient">
+        Home
+    </a>
 }
 
-<h2 style="text-align: center; font-size: 1.5rem;">Semaine du @startOfWeek.ToString("dd MMMM yyyy")</h2>
-
+<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
 
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
     <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
         <thead>
         <tr style="background-color: #f0f0f0; height: 5%">
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 10%;"></th> <!-- Colonne pour les heures -->
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 10%;"></th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday @(startOfWeek.Day)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday @(startOfWeek.Day+1)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday @(startOfWeek.Day+2)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday @(startOfWeek.Day+3)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday @(startOfWeek.Day+4)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday @(startOfWeek.Day+5)</th>
+            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday @(startOfWeek.Day+6)</th>
         </tr>
         </thead>
         <tbody>
         @for (int hour = 8; hour <= 18; hour++)
         {
             <tr>
-                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%;">@hour:00</td> <!-- Affichage des heures -->
+                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; background-color: #f8f9fa; padding: 10px;">
+                    @hour:00
+                </td>
                 @for (int i = 0; i < 7; i++)
                 {
                     var currentDate = startOfWeek.AddDays(i);
-                    var eventToday = events?.FirstOrDefault(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour);
-                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden;">
-                        @if (eventToday != null)
+                    var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden; padding: 5px;">
+                        @if (eventToday != null && eventToday.Any())
                         {
-                            <div style="color: red; font-weight: bold; word-wrap: break-word; margin-top: 5px;">@eventToday.Title</div>
+                            @foreach (var evt in eventToday)
+                            {
+                                <div style="background: linear-gradient(135deg, #ff7e5f, #feb47b);color: white;font-weight: bold;
+                            word-wrap: break-word;
+                            margin-top: 5px;
+                            padding: 8px;
+                            border-radius: 6px;
+                            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+                            transition: transform 0.2s ease-in-out;
+                            cursor: pointer;
+                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                    @evt.Title
+                                </div>
+                            }
                         }
                     </td>
                 }
             </tr>
         }
+
         </tbody>
     </table>
 </div>
 
-<!-- Liens pour navigation entre les semaines -->
 <div style="position: absolute; left: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Semaine précédente</a>
+    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Previous week </a>
 </div>
 
 <div style="position: absolute; right: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Semaine suivante →</a>
+    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Next week →</a>
 </div>

@@ -1,0 +1,12 @@
+@{
+    ViewBag.Title = "Ma Page";
+}
+
+<h2>Ma Page</h2>
+
+<form asp-controller="Appointment" asp-action="SubmitAppo" method="post">
+    <input type="hidden" name="hour" value="@ViewBag.SelectedHour" />
+    <input type="text" name="name" placeholder="Nom" required />
+    <input type="date" name="date" value="@ViewBag.SelectedDate"/>
+    <button type="submit">Envoyer</button>
+</form>
