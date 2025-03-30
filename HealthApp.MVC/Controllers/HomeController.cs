@@ -79,10 +79,11 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
         HttpContext.Session.SetString("IsLoggedIn", "true");
         HttpContext.Session.Clear();
+        await _signInManager.SignOutAsync();
         ViewBag.P = null;
         return RedirectToAction("Index");
     }
@@ -158,15 +159,16 @@ public class HomeController : Controller
             if (result.Succeeded)
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
+                HttpContext.Session.SetString("user_email", email);
                 
                 var roles = await _userManager.GetRolesAsync(user);
                 string role = roles.Count > 0 ? roles[0] : "Unknown";
                 HttpContext.User.IsInRole("PATIENT");
                 HttpContext.Session.SetString("UserRole", role);
                 Console.WriteLine("Role: "+role);
-                if (role == "Doctor")
+                if (role == "DOCTOR")
                 {
-                    HttpContext.Session.SetInt32("doctor_id", int.Parse(user.Id));
+                   // HttpContext.Session.SetInt32("doctor_id", int.Parse(user.Id));
                     return RedirectToAction("HomeDoctor", "Doctor");
                 }
                 else if (role == "PATIENT")

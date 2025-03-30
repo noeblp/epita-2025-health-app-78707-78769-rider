@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
@@ -12,6 +13,7 @@ using hospital.Modif_data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Calendar = hospital.Models.Calendar;
@@ -24,12 +26,14 @@ public class DoctorController : Controller
 {
    
     private readonly ApplicationDbContext _context;
-    
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public DoctorController( ApplicationDbContext context)
+
+    public DoctorController( ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         
         _context = context;
+        _userManager = userManager;
         _context.Database.EnsureCreated();
         
         
@@ -37,7 +41,7 @@ public class DoctorController : Controller
     
     
 
-    /*public IActionResult HomeDoctor(int? year, int? month, int? week, int? day)
+    public async Task<IActionResult> HomeDoctor(int? year, int? month, int? week, int? day)
     {
         int currentYear = year ?? DateTime.Now.Year;
         int currentMonth = month ?? DateTime.Now.Month;
@@ -53,13 +57,15 @@ public class DoctorController : Controller
             
 
             
-        List<(string,string,int,int)> res;
-        List<(string,string,int,int)> res2;
-        int? userId = HttpContext.Session.GetInt32("user_id");
+        List<(string,string,string,int)> res;
+        List<(string,string,string,int)> res2;
+        string email = HttpContext.Session.GetString("user_email");
+        var user = await _userManager.FindByEmailAsync(email);
+        
         using (var connection = ModifUser.ConnectToDatabase())
         {
-            res =GetPatientEvents(connection,userId,"A");
-            res2=GetPatientEvents(connection,userId,"N");
+            res =GetPatientEvents(connection,user.Id,"A");
+            res2=GetPatientEvents(connection,user.Id,"N");
         }
 
 
@@ -68,7 +74,7 @@ public class DoctorController : Controller
         
         foreach (var c in res)
         {
-            (string,string,int,int) dateStr = c; 
+            (string,string,string,int) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
@@ -79,12 +85,12 @@ public class DoctorController : Controller
             string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
             string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
             
-            events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id =dateStr.Item4 });
+            events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.Id,appo_id =dateStr.Item4 });
             
         }
         foreach (var c in res2)
         {
-            (string,string,int,int) dateStr = c; 
+            (string,string,string,int) dateStr = c; 
             DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
             int j = date.Day;
             int m = date.Month;
@@ -94,7 +100,7 @@ public class DoctorController : Controller
             int ms = jour.Minute;
             string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
             string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
-            newEvents.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id = dateStr.Item4 });
+            newEvents.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.Id,appo_id = dateStr.Item4 });
             
         }
         
@@ -118,7 +124,7 @@ public class DoctorController : Controller
     
     
 
-    static List<(string,string,int,int)> GetPatientEvents(SqliteConnection connection, int? patientId, string letter)
+    static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, string patientId, string letter)
     {
         var query = "SELECT date,hour,name,appo_id,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
@@ -128,16 +134,16 @@ public class DoctorController : Controller
         connection.Open();
         
         using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string,int,int)> dates = new List<(string,string,int,int)>();
+        List<(string,string,string,int)> dates = new List<(string,string,string,int)>();
         string date = "";
         string hour = "";
-        int name;
+        string name;
         int appo_id = 0;
         while (reader.Read())
         {
             date=reader["date"].ToString();
             hour = reader["hour"].ToString();
-            name = int.Parse(reader["patient_id"].ToString());
+            name = reader["patient_id"].ToString();
             appo_id = int.Parse(reader["appo_id"].ToString());
             dates.Add((date,hour,name,appo_id));
         }
@@ -179,7 +185,7 @@ public class DoctorController : Controller
 
         return RedirectToAction("HomeDoctor"); 
     }
-*/
+
     
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

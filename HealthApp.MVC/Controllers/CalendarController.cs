@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Calendar = hospital.Models.Calendar;
 
@@ -16,17 +18,19 @@ namespace hospital.Controllers
     {
         
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
     
 
-        /*public CalendarController( ApplicationDbContext context)
+        public CalendarController( ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
         
             _context = context;
+            _userManager = userManager;
             _context.Database.EnsureCreated();
         
         
         }
-        public IActionResult Calendar(int? year, int? month, int? week)
+        public async Task<IActionResult> Calendar(int? year, int? month, int? week)
         {
             int currentYear = year ?? DateTime.Now.Year;
             int currentMonth = month ?? DateTime.Now.Month;
@@ -41,11 +45,12 @@ namespace hospital.Controllers
             
 
             
-            List<(string,string,int)> res;
-            int? userId = HttpContext.Session.GetInt32("user_id");
+            List<(string,string,string)> res;
+            string email = HttpContext.Session.GetString("user_email");
+            var user = await _userManager.FindByEmailAsync(email);
             using (var connection = ModifUser.ConnectToDatabase())
             {
-                res =GetPatientEvents(connection,userId);
+                res =GetPatientEvents(connection,user.Id);
             }
 
 
@@ -53,7 +58,7 @@ namespace hospital.Controllers
 
             foreach (var c in res)
             {
-                (string,string,int) dateStr = c; 
+                (string,string,string) dateStr = c; 
                 DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
                 int j = date.Day;
                 int m = date.Month;
@@ -64,7 +69,7 @@ namespace hospital.Controllers
 
                 string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
                 string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
-                events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+                events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.Id});
                 
             }
             
@@ -87,7 +92,7 @@ namespace hospital.Controllers
         
 
 
-        static List<(string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
+        static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, string patientId)
         {
             var query = "SELECT date,hour,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
 
@@ -97,21 +102,21 @@ namespace hospital.Controllers
             connection.Open();
         
             using SqliteDataReader reader = command.ExecuteReader();
-            List<(string,string,int)> dates = new List<(string,string,int)>();
+            List<(string,string,string)> dates = new List<(string,string,string)>();
             string date = "";
             string hour = "";
-            int name;
+            string name;
             while (reader.Read())
             {
                 date=reader["date"].ToString();
                 hour = reader["hour"].ToString();
-                name = int.Parse(reader["patient_id"].ToString());
+                name = reader["patient_id"].ToString();
                 dates.Add((date,hour,name));
             }
             connection.Close();
             
             return dates;
         }
-*/
+
     }
 }

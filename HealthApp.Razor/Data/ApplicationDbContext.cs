@@ -28,8 +28,8 @@ public class Doctor
 public class Appointments
 {
     [Key]
-    public int? doctor_id { get; set; }
-    public int? patient_id { get; set; }
+    public string doctor_id { get; set; }
+    public string patient_id { get; set; }
     public string date { get; set; }
     public string valid { get; set; }
     public string hour { get; set; }
@@ -65,7 +65,7 @@ public class Notification
 {
     [Key]
     public int notif_id { get; set; }
-    public int? patient_id { get; set; }
+    public string patient_id { get; set; }
     public string content { get; set; }
 }
 public class ApplicationDbContext : IdentityDbContext

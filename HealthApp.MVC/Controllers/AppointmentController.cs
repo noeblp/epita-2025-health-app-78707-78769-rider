@@ -5,6 +5,7 @@ using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -18,17 +19,21 @@ public class AppointmentController:Controller
     
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
     
 
-    /*public AppointmentController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public AppointmentController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
         _logger = logger;
         _context = context;
+        _userManager = userManager;
+        _signInManager = signInManager;
         _context.Database.EnsureCreated();
         
         
     }
-    public IActionResult BookAppo(int? year, int? month, int? week, int doctorId)
+    public IActionResult BookAppo(int? year, int? month, int? week, string doctorId)
     {
         if (TempData["SelectedHour"]!=null){ViewBag.SelectedHour = HttpContext.Session.GetString("SelectedHour")+":00";}
         if (TempData["SelectedHour"] != null)
@@ -39,11 +44,14 @@ public class AppointmentController:Controller
 
         }
 
-        if (HttpContext.Session.GetInt32("doctor_id") == null)
+        if (HttpContext.Session.GetString("doctor_id") == null)
         {
-            HttpContext.Session.SetInt32("doctor_id",doctorId);
+            HttpContext.Session.SetString("doctor_id",doctorId.ToString());
         }
-        var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == HttpContext.Session.GetInt32("doctor_id"));
+        
+        
+        var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == HttpContext.Session.GetString("doctor_id"));
+        
         ViewBag.DoctorName = doc.doctor_last_name;
         ViewBag.DoctorSpecialty = doc.doctor_specialty;
         
@@ -64,7 +72,9 @@ public class AppointmentController:Controller
 
             
         List<(string,string,string,int)> res;
-        int? userId = HttpContext.Session.GetInt32("user_id");
+        
+        var user_email=HttpContext.Session.GetString("user_email");
+        var user= _context.Users.FirstOrDefault(e=>e.user_email==user_email);
         using (var connection = ModifUser.ConnectToDatabase())
         {
             res =GetPatientEvents(connection,doctorId);
@@ -84,7 +94,7 @@ public class AppointmentController:Controller
             int h = jour.Hour;
             int ms = jour.Minute;
             
-            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId,appo_id = dateStr.Item4});
+            events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.user_id,appo_id = dateStr.Item4});
             Console.WriteLine(j);
         }
             
@@ -105,7 +115,7 @@ public class AppointmentController:Controller
         return (date.Day + (int)firstDay.DayOfWeek - 1) / 7 + 1;
     }
     
-    public List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
+    public List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, string patientId)
     {
         var appointments = _context.Appointment
             .Where(a => a.doctor_id == patientId && a.valid == "A")
@@ -119,8 +129,10 @@ public class AppointmentController:Controller
     [HttpPost]
     public IActionResult SubmitAppo(string date, string name,string hour)
     {
-        int? doctorid = HttpContext.Session.GetInt32("doctor_id");
-        int? patient_id = HttpContext.Session.GetInt32("user_id");
+        string doctorid = HttpContext.Session.GetString("doctor_id");
+        var user_email=HttpContext.Session.GetString("user_email");
+        var user= _context.Users.FirstOrDefault(e=>e.user_email==user_email);
+        
         string? hours = HttpContext.Session.GetString("SelectedHour");
         string? dates = TempData["SelectedDate"] as string;
         string? months = TempData["SelectedMonth"] as string;
@@ -142,7 +154,7 @@ public class AppointmentController:Controller
         int max =_context.Appointment.Max(a=>a.appo_id);
         
         _context.Appointment.Add(new Appointments
-            { doctor_id = doctorid, patient_id = patient_id, date = final_date ,valid = "N", hour= hours+":00" ,name = name,appo_id = max+1});
+            { doctor_id = doctorid, patient_id = user.user_id, date = final_date ,valid = "N", hour= hours+":00" ,name = name,appo_id = max+1});
         _context.SaveChanges();
         
         
@@ -170,10 +182,10 @@ public class AppointmentController:Controller
 
     public IActionResult FuturAppo(string doctorFilter, string dateFilter, string statusFilter)
     {
-        int? doc_id = HttpContext.Session.GetInt32("user_id");
-        Console.WriteLine("doc_id= " + doc_id);
+        var user_email=HttpContext.Session.GetString("user_email");
+        var user= _context.Users.FirstOrDefault(e=>e.user_email==user_email);
         var appointments = _context.Appointment
-            .Where(a => a.patient_id == doc_id)
+            .Where(a => a.patient_id == user.user_id)
             .Select(a => new { a.date, a.hour, a.name, a.appo_id, a.doctor_id, a.valid })
             .ToList();
     
@@ -200,7 +212,7 @@ public class AppointmentController:Controller
                 Status = a.valid,
                 stat = stat,
                 Title = doctorLastName,
-                user_Id = 12
+                user_Id = user.user_id,
             });
         }
         
@@ -246,7 +258,7 @@ public class AppointmentController:Controller
         string sql = "UPDATE Appointment SET valid = 'C' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);
         return RedirectToAction("FuturAppo");
-    }*/
+    }
     
     
 }

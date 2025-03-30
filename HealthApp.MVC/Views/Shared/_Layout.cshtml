@@ -26,7 +26,7 @@
                     </li>
 
                     @{
-                        var userRole = User.IsInRole("PATIENT");
+                        
                         Console.WriteLine("test= "+User.IsInRole("PATIENT") + "and "+ User.Identity.Name);
                     }
 
@@ -36,12 +36,12 @@
                     </li>
 
                     @* Show Privacy link only if user is a Patient *@
-                    @if (!userRole)
-                    {
+                    
+                    
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                    }
+                    
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
@@ -53,7 +53,7 @@
 
                     <!--***********************************************************************************************-->
 
-                    @if (Context.Session.GetString("user_role") == "D")
+                    @if (User.IsInRole("DOCTOR"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Doctors">Doctors</a>
@@ -62,7 +62,7 @@
 
                     <!--***********************************************************************************************-->
                     
-                    @if (Context.Session.GetString("user_role") == "P")
+                    @if (User.IsInRole("PATIENT"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Search">Book an Appointment</a>
@@ -78,7 +78,7 @@
 
                     <!--***********************************************************************************************-->
                     
-                    @if (Context.Session.GetString("user_role") == "A")
+                    @if (User.IsInRole("ADMIN"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AddDoctor">Admin</a>

@@ -19,7 +19,7 @@ public class NotificationController:Controller
     public IActionResult Notif(int id)
     {
         var Notifications = _context.Notifications
-            .Where(n => n.patient_id == id)
+            .Where(n => n.patient_id == id.ToString())
             .ToList();
         ViewBag.Notifications = Notifications;
         return View();
