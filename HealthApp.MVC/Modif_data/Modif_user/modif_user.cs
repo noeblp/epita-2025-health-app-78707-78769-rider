@@ -125,5 +125,42 @@ namespace hospital.Modif_data
                 Console.WriteLine("tout sup");
             }
         }
+<<<<<<< Updated upstream
+=======
+
+        public static void update_user(SqliteConnection connection, string name, string lastname, string email,
+            string password)
+        {
+            string query = "UPDATE users SET user_first_name = @name, user_last_name = @lastname, user_password = @password WHERE user_email = @email";
+            Console.WriteLine("updateuser called!");
+            using (var command = new SqliteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@lastname", lastname);
+                command.Parameters.AddWithValue("@password", password);
+                command.Parameters.AddWithValue("@email", email); 
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+
+            
+        }
+
+        public static void UpdateUserRole(SqliteConnection connection, int userId, string newRole)
+        {
+            string query = "UPDATE users SET user_role = @newRole WHERE user_id = @userId";
+            using (var command = new SqliteCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@newRole", newRole);
+                command.Parameters.AddWithValue("@userId", userId);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+>>>>>>> Stashed changes
     }
 }
