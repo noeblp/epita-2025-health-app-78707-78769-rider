@@ -37,7 +37,7 @@ public class HomeController : Controller
         return View();
     }
 
-    [Authorize(Roles = "PATIENT")]
+    
     public IActionResult Privacy()
     {
         HttpContext.Session.Clear();
@@ -99,11 +99,11 @@ public class HomeController : Controller
     {
         var user = new IdentityUser { UserName = email, Email = email};
         var result = await _userManager.CreateAsync(user, password);
-        //int maxId=(int)_context.Users.Max(e => e.user_id);
+        
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "PATIENT");
+            await _userManager.AddToRoleAsync(user, "DOCTOR");
 
             _context.Users.Add(new User
             {
@@ -112,10 +112,19 @@ public class HomeController : Controller
                 user_last_name = lastName,
                 user_first_name = firstName,
                 user_password = password,
-                user_role = "P"
+                user_role = "D"
             });
             await _context.SaveChangesAsync();
-            _context.Patient.Add(new Patients
+            _context.Doctors.Add(new Doctor
+            {
+                doctor_email = user.Email,
+                doctor_id = user.Id,
+                doctor_last_name = user.UserName,
+                doctor_specialty = "e",
+                doctor_first_name = user.UserName
+            });
+            await _context.SaveChangesAsync();
+            /*_context.Patient.Add(new Patients
             {
                 patient_email = email,
                 patient_id = user.Id,
@@ -123,7 +132,7 @@ public class HomeController : Controller
                 patient_name = firstName
             });
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
             return RedirectToAction("Index");
         }
 
@@ -152,7 +161,7 @@ public class HomeController : Controller
                 
                 var roles = await _userManager.GetRolesAsync(user);
                 string role = roles.Count > 0 ? roles[0] : "Unknown";
-                
+                HttpContext.User.IsInRole("PATIENT");
                 HttpContext.Session.SetString("UserRole", role);
                 Console.WriteLine("Role: "+role);
                 if (role == "Doctor")

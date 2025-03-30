@@ -19,7 +19,7 @@ public class Admins
 public class Doctor
 {
     [Key]
-    public int doctor_id { get; set; }
+    public string doctor_id { get; set; }
     public string doctor_first_name { get; set; }
     public string doctor_last_name { get; set; }
     public string doctor_email { get; set; }

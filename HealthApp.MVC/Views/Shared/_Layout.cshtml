@@ -24,15 +24,33 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
+
+                    @{
+                        var userRole = User.IsInRole("PATIENT");
+                        Console.WriteLine("test= "+User.IsInRole("PATIENT") + "and "+ User.Identity.Name);
+                    }
+
+                    @* Show Doctors link unconditionally *@
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Doctors">Doctors</a>
                     </li>
+
+                    @* Show Privacy link only if user is a Patient *@
+                    @if (!userRole)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    }
+
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+                    </li>
 
-                   
-                    
-                    
+
+
+
+
                     <!--***********************************************************************************************-->
 
                     @if (Context.Session.GetString("user_role") == "D")

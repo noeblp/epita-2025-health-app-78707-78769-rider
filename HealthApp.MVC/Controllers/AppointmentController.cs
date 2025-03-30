@@ -20,7 +20,7 @@ public class AppointmentController:Controller
     private readonly ApplicationDbContext _context;
     
 
-    public AppointmentController(ILogger<HomeController> logger, ApplicationDbContext context)
+    /*public AppointmentController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _logger = logger;
         _context = context;
@@ -246,7 +246,7 @@ public class AppointmentController:Controller
         string sql = "UPDATE Appointment SET valid = 'C' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);
         return RedirectToAction("FuturAppo");
-    }
+    }*/
     
     
 }
