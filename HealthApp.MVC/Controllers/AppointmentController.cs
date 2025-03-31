@@ -242,11 +242,13 @@ public class AppointmentController:Controller
     [HttpPost]
     public IActionResult CancelEvent(int id)
     {
+        
         var appo = _context.Appointment.Where(a => a.appo_id == id).FirstOrDefault();
         int maxId = _context.Notifications.Max(u => u.notif_id);
+        var email=_context.Users.FirstOrDefault(e=>e.user_id==appo.doctor_id).user_email;
+        SendMail.SendConfirmationEmail(email, "Appointment canceled", "Your appointment on " +appo.date +" at "+ appo.hour+" has been canceled.");
 
-
-        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been cancelled." });
+        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been canceled." });
         _context.SaveChanges();
         
         
