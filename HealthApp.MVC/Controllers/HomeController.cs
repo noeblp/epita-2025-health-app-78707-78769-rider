@@ -46,11 +46,6 @@ public class HomeController : Controller
 
     public IActionResult Register()
     {
-        var userI = HttpContext.Session.GetInt32("user_id");
-        var userId = HttpContext.Session.GetString("user_first_name");
-        var username = HttpContext.Session.GetString("user_last_name");
-        var email = HttpContext.Session.GetString("user_email");
-        Console.WriteLine(userId + "  " + username + "  " + email + "  " + userI);
         return View();
     }
 
@@ -116,7 +111,7 @@ public class HomeController : Controller
                 user_role = "D"
             });
             await _context.SaveChangesAsync();
-            _context.Doctors.Add(new Doctor
+           /* _context.Doctors.Add(new Doctor
             {
                 doctor_email = user.Email,
                 doctor_id = user.Id,
@@ -124,8 +119,8 @@ public class HomeController : Controller
                 doctor_specialty = "e",
                 doctor_first_name = user.UserName
             });
-            await _context.SaveChangesAsync();
-            /*_context.Patient.Add(new Patients
+            await _context.SaveChangesAsync();*/
+            _context.Patient.Add(new Patients
             {
                 patient_email = email,
                 patient_id = user.Id,
@@ -133,7 +128,7 @@ public class HomeController : Controller
                 patient_name = firstName
             });
 
-            await _context.SaveChangesAsync();*/
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -186,13 +181,7 @@ public class HomeController : Controller
         return View("Login");
     }
 
-    public void SubmitDoctors(string firstName, string lastName, string email, string password)
-    {
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-            //modif_doctors.InsertDoctors(connection, firstName, lastName, email, password);
-        }
-    }
+    
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

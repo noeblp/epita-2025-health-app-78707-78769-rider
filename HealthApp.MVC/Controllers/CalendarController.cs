@@ -48,10 +48,8 @@ namespace hospital.Controllers
             List<(string,string,string)> res;
             string email = HttpContext.Session.GetString("user_email");
             var user = await _userManager.FindByEmailAsync(email);
-            using (var connection = ModifUser.ConnectToDatabase())
-            {
-                res =GetPatientEvents(connection,user.Id);
-            }
+                res =GetPatientEvents(user.Id);
+            
 
 
             var events = new List<Calendar>();
@@ -92,30 +90,21 @@ namespace hospital.Controllers
         
 
 
-        static List<(string,string,string)> GetPatientEvents(SqliteConnection connection, string patientId)
+        public List<(string,string,string)> GetPatientEvents(string patientId)
         {
-            var query = "SELECT date,hour,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
+            var appointments = _context.Appointment
+                .Where(a => a.doctor_id == patientId && a.valid == "A") // Filter by doctorId and valid
+                .Select(a => new
+                {
+                    a.date,
+                    a.hour,
+                    a.patient_id
+                })
+                .ToList();
 
-            using SqliteCommand command = new SqliteCommand(query, connection);
-            command.Parameters.AddWithValue("@patient", patientId);
-            command.Parameters.AddWithValue("@letter", "A");
-            connection.Open();
-        
-            using SqliteDataReader reader = command.ExecuteReader();
-            List<(string,string,string)> dates = new List<(string,string,string)>();
-            string date = "";
-            string hour = "";
-            string name;
-            while (reader.Read())
-            {
-                date=reader["date"].ToString();
-                hour = reader["hour"].ToString();
-                name = reader["patient_id"].ToString();
-                dates.Add((date,hour,name));
-            }
-            connection.Close();
-            
-            return dates;
+            var result = appointments.Select(a => (a.date, a.hour, a.patient_id.ToString())).ToList();
+
+            return result;
         }
 
     }

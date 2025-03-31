@@ -61,12 +61,9 @@ public class DoctorController : Controller
         List<(string,string,string,int)> res2;
         string email = HttpContext.Session.GetString("user_email");
         var user = await _userManager.FindByEmailAsync(email);
+            res =GetPatientEvents(user.Id,"A");
+            res2=GetPatientEvents(user.Id,"N");
         
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-            res =GetPatientEvents(connection,user.Id,"A");
-            res2=GetPatientEvents(connection,user.Id,"N");
-        }
 
 
         var events = new List<Calendar>();
@@ -124,32 +121,23 @@ public class DoctorController : Controller
     
     
 
-    static List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, string patientId, string letter)
+    public List<(string,string,string,int)> GetPatientEvents(string patientId, string letter)
     {
-        var query = "SELECT date,hour,name,appo_id,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
+        var appointments = _context.Appointment
+            .Where(a => a.doctor_id == patientId && a.valid == letter) // Filter by doctorId and valid
+            .Select(a => new
+            {
+                a.date,
+                a.hour,
+                a.name,
+                a.appo_id,
+                a.patient_id
+            })
+            .ToList();
 
-        using SqliteCommand command = new SqliteCommand(query, connection);
-        command.Parameters.AddWithValue("@patient", patientId);
-        command.Parameters.AddWithValue("@letter", letter);
-        connection.Open();
+        var result = appointments.Select(a => (a.date, a.hour, a.name, a.appo_id)).ToList();
         
-        using SqliteDataReader reader = command.ExecuteReader();
-        List<(string,string,string,int)> dates = new List<(string,string,string,int)>();
-        string date = "";
-        string hour = "";
-        string name;
-        int appo_id = 0;
-        while (reader.Read())
-        {
-            date=reader["date"].ToString();
-            hour = reader["hour"].ToString();
-            name = reader["patient_id"].ToString();
-            appo_id = int.Parse(reader["appo_id"].ToString());
-            dates.Add((date,hour,name,appo_id));
-        }
-        connection.Close();
-        
-        return dates;
+        return result;
     }
     
     

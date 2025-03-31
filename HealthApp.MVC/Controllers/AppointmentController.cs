@@ -75,10 +75,8 @@ public class AppointmentController:Controller
         
         var user_email=HttpContext.Session.GetString("user_email");
         var user= _context.Users.FirstOrDefault(e=>e.user_email==user_email);
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-            res =GetPatientEvents(connection,doctorId);
-        }
+        res =GetPatientEvents(doctorId);
+        
 
 
         var events = new List<Calendar>();
@@ -115,7 +113,7 @@ public class AppointmentController:Controller
         return (date.Day + (int)firstDay.DayOfWeek - 1) / 7 + 1;
     }
     
-    public List<(string,string,string,int)> GetPatientEvents(SqliteConnection connection, string patientId)
+    public List<(string,string,string,int)> GetPatientEvents(string patientId)
     {
         var appointments = _context.Appointment
             .Where(a => a.doctor_id == patientId && a.valid == "A")
