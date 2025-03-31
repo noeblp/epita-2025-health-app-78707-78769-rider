@@ -150,7 +150,7 @@ public class DoctorController : Controller
         var email=_context.Users.FirstOrDefault(e=>e.user_id==appo.patient_id).user_email;
         SendMail.SendConfirmationEmail(email, "Appointment accepted", "Your appointment on " +appo.date +" at "+ appo.hour+" has been accepted.");
 
-        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been accepted." });
+        _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been accepted." });
         _context.SaveChanges();
     
         string sql = "UPDATE Appointment SET valid = 'A' WHERE appo_id = @p0";
@@ -167,7 +167,7 @@ public class DoctorController : Controller
         var email=_context.Users.FirstOrDefault(e=>e.user_id==appo.patient_id).user_email;
         SendMail.SendConfirmationEmail(email, "Appointment declined", "Your appointment on " +appo.date +" at "+ appo.hour+" has been declined.");
 
-        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been declined." });
+        _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been declined." });
         _context.SaveChanges();
     
         string sql = "UPDATE Appointment SET valid = 'D' WHERE appo_id = @p0";
@@ -178,9 +178,5 @@ public class DoctorController : Controller
 
     
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+    
 }

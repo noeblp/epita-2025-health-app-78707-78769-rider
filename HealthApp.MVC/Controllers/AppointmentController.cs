@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Appointments = HealthApp.Razor.Data.Appointments;
 
 namespace hospital.Controllers;
 
@@ -248,7 +247,7 @@ public class AppointmentController:Controller
         var email=_context.Users.FirstOrDefault(e=>e.user_id==appo.doctor_id).user_email;
         SendMail.SendConfirmationEmail(email, "Appointment canceled", "Your appointment on " +appo.date +" at "+ appo.hour+" has been canceled.");
 
-        _context.Notifications.Add(new Notification { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been canceled." });
+        _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been canceled." });
         _context.SaveChanges();
         
         

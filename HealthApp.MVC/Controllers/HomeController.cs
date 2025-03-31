@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
-
+using hospital.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Sqlite;
@@ -121,7 +121,7 @@ public class HomeController : Controller
                 doctor_first_name = user.UserName
             });
             await _context.SaveChangesAsync();*/
-            _context.Patient.Add(new Patients
+            _context.Patient.Add(new Patient
             {
                 patient_email = email,
                 patient_id = user.Id,
@@ -184,9 +184,5 @@ public class HomeController : Controller
 
     
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+    
 }

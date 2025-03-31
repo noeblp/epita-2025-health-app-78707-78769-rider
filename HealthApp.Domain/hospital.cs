@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace HealthApp.Domain;
+namespace HealthApp.hospital;
 
 public class hospital
 {
@@ -22,16 +22,7 @@ public class hospital
         public string patient_email { get; set; }
     }
 
-    public class Appointment
-    {
-        public string doctors{ get; set; }
-        public int patient_id { get; set; }
-        public string date { get; set; }
-        public string valid { get; set; }
-        public string hour { get; set; }
-        public string name{ get; set; }
-        
-    }
+    
     
     
     public class AppDbContext : DbContext
@@ -40,7 +31,7 @@ public class hospital
         
         public DbSet<User> Users { get; set; }
         public DbSet<Patient> Patients { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
+       
         
         public AppDbContext()
         {

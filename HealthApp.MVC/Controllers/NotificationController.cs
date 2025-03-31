@@ -1,7 +1,6 @@
 using System.Linq;
 using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
-using HealthApp.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
