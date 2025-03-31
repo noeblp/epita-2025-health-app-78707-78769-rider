@@ -2,19 +2,52 @@
 
 <h2 class="text-center">📅 Mes Rendez-vous</h2>
 <div class="container mt-4">
+    <form method="get" asp-controller="Appointment" asp-action="FuturAppo">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <select name="doctorFilter" class="form-control" onchange="this.form.submit()">
+                    <option value="">All doctors</option>
+                    @foreach (var doctor in Model.Select(r => r.Title).Distinct())
+                    {
+                        <option value="@doctor" selected="@(ViewBag.SelectedDoctor == doctor ? "selected" : null)">@doctor</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="dateFilter" class="form-control" onchange="this.form.submit()">
+                    <option value="">All dates</option>
+                    @foreach (var date in Model.Select(r => r.Date.ToString("dd/MM/yyyy")).Distinct())
+                    {
+                        <option value="@date" selected="@(ViewBag.SelectedDate == date ? "selected" : null)">@date</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="statusFilter" class="form-control" onchange="this.form.submit()">
+                    <option value="">All status</option>
+                    <option value="A" selected="@(ViewBag.SelectedStatus == "A" ? "selected" : null)">Valid</option>
+                    <option value="V" selected="@(ViewBag.SelectedStatus == "C" ? "selected" : null)">Canceled</option>
+                    <option value="N" selected="@(ViewBag.SelectedStatus == "N" ? "selected" : null)">On hold</option>
+                </select>
+            </div>
+        </div>
+    </form>
     <div class="row">
         @foreach (var rdv in Model)
         {
             <div class="col-md-4">
                 <div class="card shadow-lg p-3 mb-4 bg-white rounded" style="transition: 0.3s;">
                     <div class="card-body">
-                        <h5 class="card-title">👤 @rdv.Date.ToString("HH:mm")</h5>
+                        
                         <p class="card-text">🗓 <strong>@rdv.Date.ToString("dd MMMM yyyy")</strong></p>
+                        <p class="card-title">🕔 @rdv.Date.ToString("HH:mm")</p>
                         <p class="card-text">👨‍⚕️ Docteur: @rdv.Title</p>
+                        <p class="card-text">📌 Status: @rdv.stat</p>
+                        
                         <form method="post" asp-controller="Appointment" asp-action="CancelEvent">
                             <input type="hidden" name="id" value="@rdv.appo_id" />
                             <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-                                Refuser
+                                Annuler
                             </button>
                         </form>
                     </div>

@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Calendar = hospital.Models.Calendar;
 
@@ -16,17 +18,19 @@ namespace hospital.Controllers
     {
         
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
     
 
-        public CalendarController( ApplicationDbContext context)
+        public CalendarController( ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
         
             _context = context;
+            _userManager = userManager;
             _context.Database.EnsureCreated();
         
         
         }
-        public IActionResult Calendar(int? year, int? month, int? week)
+        public async Task<IActionResult> Calendar(int? year, int? month, int? week)
         {
             int currentYear = year ?? DateTime.Now.Year;
             int currentMonth = month ?? DateTime.Now.Month;
@@ -41,19 +45,18 @@ namespace hospital.Controllers
             
 
             
-            List<(string,string,int)> res;
-            int? userId = HttpContext.Session.GetInt32("user_id");
-            using (var connection = ModifUser.ConnectToDatabase())
-            {
-                res =GetPatientEvents(connection,userId);
-            }
+            List<(string,string,string)> res;
+            string email = HttpContext.Session.GetString("user_email");
+            var user = await _userManager.FindByEmailAsync(email);
+                res =GetPatientEvents(user.Id);
+            
 
 
             var events = new List<Calendar>();
 
             foreach (var c in res)
             {
-                (string,string,int) dateStr = c; 
+                (string,string,string) dateStr = c; 
                 DateTime date = DateTime.ParseExact(dateStr.Item1, "dd/MM/yyyy", null);
                 int j = date.Day;
                 int m = date.Month;
@@ -64,7 +67,7 @@ namespace hospital.Controllers
 
                 string user_name = _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_last_name;
                 string firstName= _context.Users.FirstOrDefault(e=>e.user_id==dateStr.Item3).user_first_name;
-                events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = userId});
+                events.Add(new Calendar { Title = firstName+ " "+ user_name, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.Id});
                 
             }
             
@@ -87,30 +90,21 @@ namespace hospital.Controllers
         
 
 
-        static List<(string,string,int)> GetPatientEvents(SqliteConnection connection, int? patientId)
+        public List<(string,string,string)> GetPatientEvents(string patientId)
         {
-            var query = "SELECT date,hour,patient_id FROM appointment WHERE (doctor_id,valid) = (@patient,@letter)";
+            var appointments = _context.Appointment
+                .Where(a => a.doctor_id == patientId && a.valid == "A") // Filter by doctorId and valid
+                .Select(a => new
+                {
+                    a.date,
+                    a.hour,
+                    a.patient_id
+                })
+                .ToList();
 
-            using SqliteCommand command = new SqliteCommand(query, connection);
-            command.Parameters.AddWithValue("@patient", patientId);
-            command.Parameters.AddWithValue("@letter", "A");
-            connection.Open();
-        
-            using SqliteDataReader reader = command.ExecuteReader();
-            List<(string,string,int)> dates = new List<(string,string,int)>();
-            string date = "";
-            string hour = "";
-            int name;
-            while (reader.Read())
-            {
-                date=reader["date"].ToString();
-                hour = reader["hour"].ToString();
-                name = int.Parse(reader["patient_id"].ToString());
-                dates.Add((date,hour,name));
-            }
-            connection.Close();
-            
-            return dates;
+            var result = appointments.Select(a => (a.date, a.hour, a.patient_id.ToString())).ToList();
+
+            return result;
         }
 
     }

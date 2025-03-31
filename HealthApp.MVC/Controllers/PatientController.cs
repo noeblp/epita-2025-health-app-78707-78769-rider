@@ -1,54 +1,65 @@
 using System.Collections.Generic;
-using hospital.Modif_data;
-
+using System.Linq;
+using HealthApp.Razor.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 
 namespace hospital.Controllers;
 
 public class PatientController:Controller
 {
+    
+    private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
+    
+
+    public PatientController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+    {
+        _logger = logger;
+        _context = context;
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _context.Database.EnsureCreated();
+        
+        
+    }
     public IActionResult Manage()
     {
         return View();
     }
     
-    private static (List<string>,List<int>) GetDoctorList(SqliteConnection connection, string doctorName, string specialty)
+    public (List<string>,List<string>) GetDoctorList(string doctorName, string specialty)
     {
-        var query = "SELECT doctor_last_name, doctor_specialty,doctor_id FROM doctors WHERE 1=1";
-    
+        var query = _context.Doctors.AsQueryable();
+
+        // Apply the conditional filters based on input parameters
         if (!string.IsNullOrEmpty(doctorName))
         {
-            query += " AND doctor_last_name LIKE @doctorName";
+            query = query.Where(d => d.doctor_last_name.Contains(doctorName)); // Partial match for last name
         }
+
         if (!string.IsNullOrEmpty(specialty))
         {
-            query += " AND doctor_specialty = @specialty";
+            query = query.Where(d => d.doctor_specialty == specialty);
         }
 
-        using SqliteCommand command = new SqliteCommand(query, connection);
-    
-        if (!string.IsNullOrEmpty(doctorName))
-        {
-            command.Parameters.AddWithValue("@doctorName", "%" + doctorName + "%"); // Search for partial match
-        }
-        if (!string.IsNullOrEmpty(specialty))
-        {
-            command.Parameters.AddWithValue("@specialty", specialty);
-        }
+        // Execute the query and select the necessary fields
+        var doctors = query
+            .Select(d => new
+            {
+                d.doctor_last_name,
+                d.doctor_id
+            })
+            .ToList();
 
-        connection.Open();
-        using SqliteDataReader reader = command.ExecuteReader();
+        // Create the lists from the result
+        var lastNames = doctors.Select(d => d.doctor_last_name).ToList();
+        var doctorIds = doctors.Select(d => d.doctor_id.ToString()).ToList();
 
-        List<string> lastNames = new List<string>();
-        List<int> doctorIds = new List<int>();
-        while (reader.Read())
-        {
-            lastNames.Add(reader["doctor_last_name"].ToString());
-            doctorIds.Add(int.Parse(reader["doctor_id"].ToString()));
-        }
-        connection.Close();
-        return (lastNames,doctorIds);
+        return (lastNames, doctorIds);
     }
     
     
@@ -56,15 +67,14 @@ public class PatientController:Controller
     public IActionResult Search(string doctorName = null, string specialty = null)
     {
         List<string> doctorList = new List<string>();
-        List<int> doctorId = new List<int>();
+        List<string> doctorId = new List<string>();
 
         // Only query the database if either doctorName or specialty is provided
         if (!string.IsNullOrEmpty(doctorName) || !string.IsNullOrEmpty(specialty))
         {
-            using (var connection = ModifUser.ConnectToDatabase())
-            {
-                (doctorList,doctorId) = GetDoctorList(connection, doctorName, specialty);
-            }
+
+            (doctorList,doctorId) = GetDoctorList( doctorName, specialty);
+            
 
             ViewBag.DoctorList = doctorList;
             ViewBag.DoctorId = doctorId;

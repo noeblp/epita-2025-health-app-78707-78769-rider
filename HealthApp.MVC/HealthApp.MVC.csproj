@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Modif_data\Modif_patient\" />
       <Folder Include="Pages\Doctor\" />
     </ItemGroup>
 
