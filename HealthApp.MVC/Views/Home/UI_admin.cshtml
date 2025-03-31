@@ -34,21 +34,21 @@
 <div class="admin-container">
     <h2 class="text-center text-primary fw-bold">Admin Dashboard</h2>
     <p class="text-center text-muted">Manage hospital operations</p>
-
-    <div class="mb-3">
-        <a href="/Admin/ManageDoctors" class="btn btn-primary admin-btn">Manage Doctors</a>
-    </div>
-    <div class="mb-3">
-        <a href="/Admin/ManagePatients" class="btn btn-success admin-btn">Manage Patients</a>
-    </div>
+<!--
+<div class="mb-3">
+    <a href="/Admin/ManageDoctors" class="btn btn-primary admin-btn">Manage Doctors</a>
+</div>
+<div class="mb-3">
+    <a href="/Admin/ManagePatients" class="btn btn-success admin-btn">Manage Patients</a>
+</div>-->
     <div class="mb-3">
         <a href="/Admin/ManageAppointments" class="btn btn-danger admin-btn">Manage Appointments</a>
     </div>
     <div class="mb-3">
-        <a href="/Admin/CreateUser" class="btn btn-info admin-btn">Create New User</a>
+        <a href="/Admin/AddUser" class="btn btn-info admin-btn">Create New User</a>
     </div>
     <div class="mb-3">
-        <a asp-area="" asp-controller="Admin" asp-action="Manage" class="btn btn-warning admin-btn">Update User Details</a>
+        <a href="/Admin/UserList" class="btn btn-warning admin-btn">Update User Details</a>
     </div>
     <div class="mb-3">
         <a href="/Admin/ManageAccountStatus" class="btn btn-secondary admin-btn">Activate/Deactivate Accounts</a>

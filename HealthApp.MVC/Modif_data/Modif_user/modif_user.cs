@@ -131,7 +131,7 @@ namespace hospital.Modif_data
             }
         }
 
-        public static void update_user(SqliteConnection connection, string name, string lastname, string email,
+        /*public static void update_user(SqliteConnection connection, string name, string lastname, string email,
             string password)
         {
             string query = "UPDATE users SET user_first_name = @name, user_last_name = @lastname, user_password = @password WHERE user_email = @email";
@@ -149,6 +149,6 @@ namespace hospital.Modif_data
             }
 
             
-        }
+        }*/
     }
 }

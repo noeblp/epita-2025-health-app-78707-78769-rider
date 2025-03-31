@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "User List";
+    var users = ViewBag.Users as List<Dictionary<string, object>>;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary fw-bold">User List</h2>
+    <p class="text-center text-muted">Click "Edit" to modify user details</p>
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in users)
+        {
+            <tr>
+                <td>@user["user_first_name"] @user["user_last_name"]</td>
+                <td>@user["user_email"]</td>
+                <td>@user["user_role"]</td>
+                <td>
+                    <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@user["user_id"]" class="btn btn-sm btn-primary">Edit</a>
+                </td>
+
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

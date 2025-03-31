@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Add User";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary fw-bold">Add New User</h2>
+
+    <form method="post" asp-controller="Admin" asp-action="AddUser">
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" name="user_first_name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="user_last_name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="user_email" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="user_password" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-control" name="user_role" required>
+                <option value="P">Patient</option>
+                <option value="D">Doctor</option>
+                <option value="A">Admin</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Add User</button>
+    </form>
+</div>

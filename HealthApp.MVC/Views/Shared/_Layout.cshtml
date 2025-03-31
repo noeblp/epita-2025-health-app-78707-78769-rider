@@ -54,13 +54,15 @@
                     }
 
                     <!--***********************************************************************************************-->
-                    
+
                     @if (Context.Session.GetString("user_role") == "A")
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AddDoctor">Admin</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UI_admin">Admin Dashboard</a>
                         </li>
                     }
+
+
 
 
                     <!--***********************************************************************************************-->
