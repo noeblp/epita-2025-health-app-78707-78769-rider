@@ -1,10 +1,10 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading;
 
-public class send_mail
+public class SendMail
 {
-
     public static void SendConfirmationEmail(string recipient, string subject, string body)
     {
         try
@@ -18,7 +18,7 @@ public class send_mail
             SmtpClient smtp = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("hospital.dorset@gmail.com", "cnzi jkns cnug dmeh"),
+                Credentials = new NetworkCredential("hospital.dorset@gmail.com", "mksw hfnp ykal htcr"),
                 EnableSsl = true
             };
 
@@ -30,4 +30,11 @@ public class send_mail
             
         }
     }
+
+
+    
+
+    
+
+    
 }
