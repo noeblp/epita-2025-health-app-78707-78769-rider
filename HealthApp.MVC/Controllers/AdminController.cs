@@ -184,6 +184,40 @@ public class AdminController : Controller
             //####################################CHANGE REDIRECTION###########################################
             return RedirectToAction("UserList"); // Redirect back to the user list
     }
+        
+        
+        [HttpPost]
+        public IActionResult DeleteUser(int user_id)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+            
+                // Check if the user is an admin
+                using (var checkCommand = new SqliteCommand("SELECT user_role FROM users WHERE user_id = @id", connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@id", user_id);
+                    var role = checkCommand.ExecuteScalar()?.ToString();
+                
+                    if (role == "A")
+                    {
+                        TempData["Error"] = "Admin accounts cannot be deleted!";
+                        return RedirectToAction("UserList");
+                    }
+                }
+            
+                // Delete user if not an admin
+                using (var deleteCommand = new SqliteCommand("DELETE FROM users WHERE user_id = @id", connection))
+                {
+                    deleteCommand.Parameters.AddWithValue("@id", user_id);
+                    deleteCommand.ExecuteNonQuery();
+                }
+            }
+        
+            TempData["Success"] = "User deleted successfully!";
+            return RedirectToAction("UserList");
+        }
+
 }
 
 
