@@ -100,7 +100,7 @@ public class HomeController : Controller
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "ADMIN");
+            await _userManager.AddToRoleAsync(user, "PATIENT");
 
             _context.Users.Add(new User
             {
@@ -109,7 +109,7 @@ public class HomeController : Controller
                 user_last_name = lastName,
                 user_first_name = firstName,
                 user_password = password,
-                user_role = "A"
+                user_role = "P"
             });
             await _context.SaveChangesAsync();
            /* _context.Doctors.Add(new Doctor
@@ -128,6 +128,11 @@ public class HomeController : Controller
                 patient_last_name = lastName,
                 patient_name = firstName
             });
+            /*_context.Admin.Add(new Admin
+            {
+                admin_id = user.Id,
+                admin_email = user.Email
+            });*/
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

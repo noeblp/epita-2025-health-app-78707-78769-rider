@@ -5,5 +5,6 @@ namespace hospital.Models;
 public class Admin
 {
     [Key]
-    public int admin_id { get; set; }
+    public string admin_id { get; set; }
+    public string admin_email { get; set; }
 }

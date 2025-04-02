@@ -50,45 +50,64 @@
             Add New Doctor
         </div>
         <div class="card-body">
-            <form method="post" action="/Admin/Add">
-                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; align-items: center;">
-                    <div class="mb-3">
-                        <input type="text" name="FirstName" class="form-control" placeholder="👤 Full Name" required style="padding: 12px; font-size: 1.1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <input type="text" name="LastName" class="form-control" placeholder="🔒 Last Name" required style="padding: 12px; font-size: 1.1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <input type="email" name="Email" class="form-control" placeholder="📧 Email address" required style="padding: 12px; font-size: 1.1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" name="Password" class="form-control" placeholder="🔑 Password" required style="padding: 12px; font-size: 1.1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <select name="Specialty" class="form-control" required style="padding: 12px; font-size: 1.1rem;">
-                            <option value="">Select Specialty</option>
-                            <option value="Anesthesiology">Anesthesiology</option>
-                            <option value="Cardiology">Cardiology</option>
-                            <option value="Dermatology">Dermatology</option>
-                            <option value="Endocrinology">Endocrinology</option>
-                            <option value="Gastroenterology">Gastroenterology</option>
-                            <option value="Hematology">Hematology</option>
-                            <option value="Neurology">Neurology</option>
-                            <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
-                            <option value="Oncology">Oncology</option>
-                            <option value="Ophthalmology">Ophthalmology</option>
-                            <option value="Orthopedics">Orthopedics</option>
-                            <option value="Otolaryngology">Otolaryngology</option>
-                            <option value="Pediatrics">Pediatrics</option>
-                            <option value="Psychiatry">Psychiatry</option>
-                            <option value="Pulmonology">Pulmonology</option>
-                            <option value="Radiology">Radiology</option>
-                            <option value="Rheumatology">Rheumatology</option>
-                            <option value="Urology">Urology</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 12px; font-size: 1.1rem;">Add Doctor</button>
+            <form method="post" asp-controller="Admin" asp-action="AddUser">
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" name="user_first_name" required>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" name="user_last_name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="user_email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="user_password" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-control" name="user_role" required>
+                        <option value="P">Patient</option>
+                        <option value="D">Doctor</option>
+                        <option value="A">Admin</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Specialty</label>
+                    <select name="specialty" class="form-control">
+                        <option value="">🩺 Select Specialty</option>
+                        <option value="Anesthesiology">Anesthesiology</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Endocrinology">Endocrinology</option>
+                        <option value="Gastroenterology">Gastroenterology</option>
+                        <option value="Hematology">Hematology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Obstetrics & Gynecology">Obstetrics & Gynecology</option>
+                        <option value="Oncology">Oncology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Otolaryngology">Otolaryngology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                        <option value="Pulmonology">Pulmonology</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Rheumatology">Rheumatology</option>
+                        <option value="Urology">Urology</option>
+                    </select>
+                </div>
+
+
+
+
+                <button type="submit" class="btn btn-primary w-100">Add User</button>
             </form>
             
 

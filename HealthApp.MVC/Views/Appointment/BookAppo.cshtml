@@ -77,9 +77,12 @@
                                 }
                                 else
                                 {
-                                    <a class="btn btn-outline-primary" asp-controller="Appointment" asp-action="Init" asp-route-hour="@hour" asp-route-date="@currentDate.Day" asp-route-month="@currentDate.Month" asp-route-year="@currentDate.Year">
-                                        @hour:00
-                                    </a>
+                                    @if (i <= 4)
+                                    {
+                                        <a class="btn btn-outline-primary" asp-controller="Appointment" asp-action="Init" asp-route-hour="@hour" asp-route-date="@currentDate.Day" asp-route-month="@currentDate.Month" asp-route-year="@currentDate.Year">
+                                            @hour:00
+                                        </a>
+                                    }
                                 }
                             </td>
                         }

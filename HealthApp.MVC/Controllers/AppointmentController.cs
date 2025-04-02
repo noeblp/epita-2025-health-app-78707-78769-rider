@@ -40,9 +40,11 @@ public class AppointmentController:Controller
             ViewBag.SelectedDate = HttpContext.Session.GetString("SelectedDate") + "/" +
                                    HttpContext.Session.GetString("SelectedMonth") + "/" +
                                    HttpContext.Session.GetString("SelectedYear");
+            
 
         }
 
+        
         if (HttpContext.Session.GetString("doctor_id") == null)
         {
             HttpContext.Session.SetString("doctor_id",doctorId.ToString());

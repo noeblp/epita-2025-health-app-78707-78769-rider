@@ -35,10 +35,10 @@ public class PatientController:Controller
     {
         var query = _context.Doctors.AsQueryable();
 
-        // Apply the conditional filters based on input parameters
+        
         if (!string.IsNullOrEmpty(doctorName))
         {
-            query = query.Where(d => d.doctor_last_name.Contains(doctorName)); // Partial match for last name
+            query = query.Where(d => d.doctor_last_name.Contains(doctorName)); 
         }
 
         if (!string.IsNullOrEmpty(specialty))
@@ -46,7 +46,7 @@ public class PatientController:Controller
             query = query.Where(d => d.doctor_specialty == specialty);
         }
 
-        // Execute the query and select the necessary fields
+        
         var doctors = query
             .Select(d => new
             {
@@ -55,7 +55,7 @@ public class PatientController:Controller
             })
             .ToList();
 
-        // Create the lists from the result
+        
         var lastNames = doctors.Select(d => d.doctor_last_name).ToList();
         var doctorIds = doctors.Select(d => d.doctor_id.ToString()).ToList();
 

@@ -1,57 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users - Hospital Appointment System</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .manage-container {
-            max-width: 600px;
-            margin: auto;
-            margin-top: 80px;
-            padding: 30px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        }
-        .form-control {
-            height: 50px;
-        }
-        .manage-btn {
-            width: 100%;
-            height: 50px;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
+@model List<Appointments>
 
-<!-- Manage Users Form -->
-<div class="manage-container">
-    <h2 class="text-center text-primary fw-bold">Manage Users</h2>
-    <p class="text-center text-muted">Update user details</p>
-
-    <form method="post" action="/Patient/update_user">
-        <div class="mb-3">
-            <input type="text" name="name" class="form-control" placeholder="👤 First Name">
-        </div>
-        <div class="mb-3">
-            <input type="text" name="lastName" class="form-control" placeholder="👤 Last Name">
-        </div>
-        <div class="mb-3">
-            <input type="email" name="email" class="form-control" placeholder="📧 Email address">
-        </div>
-        <div class="mb-3">
-            <input type="password" name="password" class="form-control" placeholder="🔑 New Password">
-        </div>
-        
-        <button type="submit" class="btn btn-primary manage-btn">Update</button>
-    </form>
-</div>
-
-</body>
-</html>
+<h2>Liste des Rendez-vous</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var rdv in Model)
+    {
+        <tr>
+            <td>@rdv.appo_id</td>
+            <td>@rdv.date</td>
+            <td>@rdv.name</td>
+            <td>
+                <a href="@Url.Action("Edit", "Admin", new { id = rdv.appo_id })" class="btn btn-warning">Modif</a>
+                <a href="@Url.Action("Delete", "Admin", new { id = rdv.appo_id })" class="btn btn-warning">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

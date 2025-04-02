@@ -1,6 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using HealthApp.Razor.Data;
+using hospital.Models;
+using hospital.Models.User;
 using hospital.Modif_data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 
@@ -11,17 +19,23 @@ public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly string _connectionString = "Data Source=hospital.db";
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
 
 
-    public AdminController(ApplicationDbContext context)
+    public AdminController(ApplicationDbContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
 
         _context = context;
         _context.Database.EnsureCreated();
-
+        _userManager = userManager;
+        _signInManager = signInManager;
+        
 
     }
 
+    
+    
 
 
     public IActionResult AddDoctor()
@@ -29,10 +43,7 @@ public class AdminController : Controller
         return View();
     }
 
-    public IActionResult Manage()
-    {
-        return View();
-    }
+    
 
     [HttpPost]
     public IActionResult Add(string firstname, string lastname, string email, string password, string specialty)
@@ -48,32 +59,10 @@ public class AdminController : Controller
 
     public IActionResult UserList()
     {
-        List<Dictionary<string, object>> users = new List<Dictionary<string, object>>();
-
-        using (var connection = new SqliteConnection(_connectionString))
-        {
-            connection.Open();
-            var command =
-                new SqliteCommand("SELECT user_id, user_first_name, user_last_name, user_email, user_role FROM users",
-                    connection);
-            var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                var user = new Dictionary<string, object>
-                {
-                    ["user_id"] = reader["user_id"],
-                    ["user_first_name"] = reader["user_first_name"],
-                    ["user_last_name"] = reader["user_last_name"],
-                    ["user_email"] = reader["user_email"],
-                    ["user_role"] = reader["user_role"]
-                };
-                users.Add(user);
-            }
-        }
-
+        
+        var users= _context.Users.ToList();
         ViewBag.Users = users;
-        return View("UserList");
+        return View(users);
     }
 
     [HttpPost]
@@ -109,48 +98,20 @@ public class AdminController : Controller
             connection.Close();
         }
 
-        return RedirectToAction("UserList");
+        return RedirectToAction("UI_admin","Home");
     }
 
-    [HttpGet]
-    public IActionResult EditUser(int id)
+    
+  
+    public IActionResult EditUser(string userid)
     {
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-            connection.Open();
-            using (var command =
-                   new SqliteCommand(
-                       "SELECT user_id, user_first_name, user_last_name, user_email, user_role FROM users WHERE user_id = @id",
-                       connection))
-            {
-                command.Parameters.AddWithValue("@id", id);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        var user = new Dictionary<string, object>
-                        {
-                            ["user_id"] = reader["user_id"],
-                            ["user_first_name"] = reader["user_first_name"],
-                            ["user_last_name"] = reader["user_last_name"],
-                            ["user_email"] = reader["user_email"],
-                            ["user_role"] = reader["user_role"]
-                        };
-
-                        ViewBag.User = user;
-                        return View("EditUser");
-                    }
-                }
-            }
-
-            connection.Close();
-        }
-
-        // If no user is found, redirect back to user list with an error message
-        TempData["Error"] = "User not found!";
-        return RedirectToAction("UserList");
+        Console.WriteLine($"User ID reçu: {userid}");
+        var user = _context.Users.FirstOrDefault(a => a.user_id == userid);
+        return View(user);
+        
     }
+
+
 
     [HttpGet]
     public IActionResult AddUser()
@@ -160,30 +121,74 @@ public class AdminController : Controller
     
 
         [HttpPost]
-        public IActionResult AddUser(string user_first_name, string user_last_name, string user_email,
-            string user_password, string user_role)
+        public async Task<IActionResult> AddUser(string user_first_name, string user_last_name, string user_email,
+            string user_password,string specialty)
         {
-            using (var connection = ModifUser.ConnectToDatabase())
+            var user = new IdentityUser { UserName = user_last_name, Email = user_email};
+            var result = await _userManager.CreateAsync(user, user_password);
+
+
+            if (result.Succeeded)
             {
-                var query =
-                    "INSERT INTO users (user_first_name, user_last_name, user_email, user_password, user_role) VALUES (@firstName, @lastName, @email, @password, @role)";
+                await _userManager.AddToRoleAsync(user, "DOCTOR");
 
-                using (var command = new SqliteCommand(query, connection))
+                _context.Users.Add(new User
                 {
-                    command.Parameters.AddWithValue("@firstName", user_first_name);
-                    command.Parameters.AddWithValue("@lastName", user_last_name);
-                    command.Parameters.AddWithValue("@email", user_email);
-                    command.Parameters.AddWithValue("@password", user_password); // Ideally, hash this password
-                    command.Parameters.AddWithValue("@role", user_role);
+                    user_email = user.Email,
+                    user_id = user.Id,
+                    user_last_name = user_last_name,
+                    user_first_name = user_first_name,
+                    user_password = user_password,
+                    user_role = "D"
+                });
+                await _context.SaveChangesAsync();
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
+                _context.Doctors.Add(new Doctor
+                {
+                    doctor_email = user.Email,
+                    doctor_id = user.Id,
+                    doctor_last_name = user.UserName,
+                    doctor_specialty = specialty,
+                    doctor_first_name = user.UserName
+                });
+                await _context.SaveChangesAsync();
             }
+
             //####################################CHANGE REDIRECTION###########################################
-            return RedirectToAction("UserList"); // Redirect back to the user list
+            return RedirectToAction("UI_admin","Home"); // Redirect back to the user list
     }
+        
+        
+        
+        
+        public IActionResult Manage()
+        {
+            var rdvs = _context.Appointment.ToList();
+            return View(rdvs);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            _context.Appointment.FirstOrDefault(e=>e.appo_id==id)!.valid="C";
+            _context.SaveChanges();
+            
+            
+            return RedirectToAction("Manage");
+        }
+
+        
+
+        public IActionResult Edit(int id)
+        {
+            var rdv = _context.Appointment.FirstOrDefault(e=>e.appo_id==id);
+            if (rdv == null)
+            {
+                return NotFound();
+            }
+            return View(rdv);
+        }
+        
+    
 }
 
 

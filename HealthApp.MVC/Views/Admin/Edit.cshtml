@@ -1,0 +1,24 @@
+@model Appointments
+
+<h2>Modifier le Rendez-vous</h2>
+
+<form asp-action="Edit" method="post" class="p-4 shadow rounded bg-light">
+    <input type="hidden" asp-for="appo_id" />
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Date</label>
+        <input type="text" asp-for="date" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Time</label>
+        <input type="time" asp-for="hour" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Specialty</label>
+        <input type="text" asp-for="name" class="form-control" placeholder="Entrez la spécialité" />
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>

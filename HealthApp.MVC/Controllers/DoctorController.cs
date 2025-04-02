@@ -61,8 +61,8 @@ public class DoctorController : Controller
         List<(string,string,string,int)> res2;
         string email = HttpContext.Session.GetString("user_email");
         var user = await _userManager.FindByEmailAsync(email);
-            res =GetPatientEvents(user.Id,"A");
-            res2=GetPatientEvents(user.Id,"N");
+        res =GetPatientEvents(user.Id,"A"); 
+        res2=GetPatientEvents(user.Id,"N");
         
 
 
@@ -135,7 +135,7 @@ public class DoctorController : Controller
             })
             .ToList();
 
-        var result = appointments.Select(a => (a.date, a.hour, a.name, a.appo_id)).ToList();
+        var result = appointments.Select(a => (a.date, a.hour, a.patient_id, a.appo_id)).ToList();
         
         return result;
     }
