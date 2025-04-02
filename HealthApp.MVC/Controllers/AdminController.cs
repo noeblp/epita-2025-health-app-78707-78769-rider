@@ -101,13 +101,32 @@ public class AdminController : Controller
         return RedirectToAction("UI_admin","Home");
     }
 
+    public IActionResult EditDoctor(string id)
+    {
+        var doc=_context.Doctors.FirstOrDefault(e=>e.doctor_id==id);
+        return View(doc);
+    }
+
     
   
-    public IActionResult EditUser(string userid)
+    public async Task<IActionResult> EditUser(string userid)
     {
         Console.WriteLine($"User ID reçu: {userid}");
         var user = _context.Users.FirstOrDefault(a => a.user_id == userid);
-        return View(user);
+        
+        
+        var test = await _userManager.FindByIdAsync(user.user_id);
+        var roles = await _userManager.GetRolesAsync(test);
+        string role = roles.Count > 0 ? roles[0] : "Unknown";
+        Console.WriteLine("Role: "+role);
+        if (role == "DOCTOR")
+        {
+            return RedirectToAction("EditDoctor", "Admin", new {id = user.user_id});
+        }
+        
+        return View(_context.Patient.FirstOrDefault(e=>e.patient_id==user.user_id));
+        
+        
         
     }
 
