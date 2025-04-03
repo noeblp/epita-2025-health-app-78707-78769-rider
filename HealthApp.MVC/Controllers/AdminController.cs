@@ -206,7 +206,42 @@ public class AdminController : Controller
             }
             return View(rdv);
         }
+
+        public IActionResult UpdateDoctor(string doctor_id,string doctor_first_name, string doctor_last_name, string doctor_email,string doctor_specialty)
+        {
+            
+            var users=_context.Users.FirstOrDefault(e=>e.user_id==doctor_id);
+            users.user_first_name=doctor_first_name;
+            users.user_last_name=doctor_last_name;
+            users.user_email=doctor_email;
+            _context.SaveChanges();
+            
+            var dotorc=_context.Doctors.FirstOrDefault(e=>e.doctor_id==doctor_id);
+            dotorc.doctor_first_name=doctor_first_name;
+            dotorc.doctor_last_name=doctor_last_name;
+            dotorc.doctor_email=doctor_email;
+            dotorc.doctor_specialty=doctor_specialty;
+            _context.SaveChanges();
+            return RedirectToAction("UserList","Admin");
+        }
         
+        
+        public IActionResult UpdatePatient(string doctor_id,string first_name, string last_name, string email)
+        {
+            
+            var users=_context.Users.FirstOrDefault(e=>e.user_id==doctor_id);
+            users.user_first_name=first_name;
+            users.user_last_name=last_name;
+            users.user_email=email;
+            _context.SaveChanges();
+            
+            var dotorc=_context.Patient.FirstOrDefault(e=>e.patient_id==doctor_id);
+            dotorc.patient_name=first_name;
+            dotorc.patient_last_name=last_name;
+            dotorc.patient_email=email;
+            _context.SaveChanges();
+            return RedirectToAction("UserList","Admin");
+        }
     
 }
 
