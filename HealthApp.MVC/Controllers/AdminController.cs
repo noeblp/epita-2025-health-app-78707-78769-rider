@@ -33,30 +33,12 @@ public class AdminController : Controller
         
 
     }
-
-    
-    
-
-
     public IActionResult AddDoctor()
     {
         return View();
     }
 
     
-
-    [HttpPost]
-    public IActionResult Add(string firstname, string lastname, string email, string password, string specialty)
-    {
-        using (var connection = modif_doctors.ConnectToDatabase())
-        {
-            modif_doctors.InsertDoctors(connection, firstname, lastname, email, password, specialty);
-            return RedirectToAction("AddDoctor");
-        }
-        // return RedirectToAction("Index", "Home");
-
-    }
-
     public IActionResult UserList()
     {
         
@@ -65,41 +47,7 @@ public class AdminController : Controller
         return View(users);
     }
 
-    [HttpPost]
-    public IActionResult UpdateUser(int user_id, string user_first_name, string user_last_name, string user_email,
-        string user_role)
-    {
-        if (string.IsNullOrEmpty(user_first_name) ||
-            string.IsNullOrEmpty(user_last_name) ||
-            string.IsNullOrEmpty(user_email) ||
-            string.IsNullOrEmpty(user_role))
-        {
-            ModelState.AddModelError(string.Empty, "All fields are required.");
-            return View("EditUser");
-        }
-
-        using (var connection = ModifUser.ConnectToDatabase())
-        {
-            connection.Open();
-            using (var command =
-                   new SqliteCommand(
-                       "UPDATE users SET user_first_name = @firstName, user_last_name = @lastName, user_email = @email, user_role = @role WHERE user_id = @id",
-                       connection))
-            {
-                command.Parameters.AddWithValue("@firstName", user_first_name);
-                command.Parameters.AddWithValue("@lastName", user_last_name);
-                command.Parameters.AddWithValue("@email", user_email);
-                command.Parameters.AddWithValue("@role", user_role);
-                command.Parameters.AddWithValue("@id", user_id);
-
-                command.ExecuteNonQuery();
-            }
-
-            connection.Close();
-        }
-
-        return RedirectToAction("UI_admin","Home");
-    }
+    
 
     public IActionResult EditDoctor(string id)
     {
