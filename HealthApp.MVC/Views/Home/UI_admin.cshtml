@@ -10,22 +10,18 @@
             background-color: #f8f9fa;
         }
         .admin-container {
-            max-width: 600px;
+            max-width: 900px;
             margin: auto;
-            margin-top: 80px;
-            padding: 30px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
         }
-        .admin-btn {
-            width: 100%;
-            height: 50px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .admin-card {
+            padding: 20px;
             text-align: center;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .admin-card:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -33,25 +29,39 @@
 
 <div class="admin-container">
     <h2 class="text-center text-primary fw-bold">Admin Dashboard</h2>
-    <p class="text-center text-muted">Manage hospital operations</p>
-<!--
-<div class="mb-3">
-    <a href="/Admin/ManageDoctors" class="btn btn-primary admin-btn">Manage Doctors</a>
-</div>
-<div class="mb-3">
-    <a href="/Admin/ManagePatients" class="btn btn-success admin-btn">Manage Patients</a>
-</div>-->
-    <div class="mb-3">
-        <a href="/Admin/Manage" class="btn btn-danger admin-btn">Manage Appointments</a>
-    </div>
-    <div class="mb-3">
-        <a href="/Admin/AddDoctor" class="btn btn-info admin-btn">Create New Doctor</a>
-    </div>
-    <div class="mb-3">
-        <a href="/Admin/UserList" class="btn btn-warning admin-btn">Update User Details</a>
-    </div>
-    <div class="mb-3">
-        <a href="/Admin/ManageAccountStatus" class="btn btn-secondary admin-btn">Activate/Deactivate Accounts</a>
+    <p class="text-center text-muted">Manage hospital operations
+    
+        </p>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card bg-danger text-white admin-card">
+                <a href="/Admin/Manage" class="text-white text-decoration-none">
+                    <h4>Manage Appointments</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-info text-white admin-card">
+                <a href="/Admin/AddDoctor" class="text-white text-decoration-none">
+                    <h4>Create New Doctor</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-warning text-dark admin-card">
+                <a href="/Admin/UserList" class="text-dark text-decoration-none">
+                    <h4>Update User Details</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-secondary text-white admin-card">
+                <a href="/Admin/ManageUser" class="text-white text-decoration-none">
+                    <h4>Manage Users</h4>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -5,8 +5,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthApp.Razor.Data;
-using hospital.Models;
-using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HealthApp.Razor.Data;
 using hospital.Models;
 using hospital.Models.User;
-using hospital.Modif_data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -190,6 +189,53 @@ public class AdminController : Controller
             _context.SaveChanges();
             return RedirectToAction("UserList","Admin");
         }
+
+        public IActionResult Manageuser()
+        {
+            return View();
+        }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> AddPatient(string firstName, string lastName, string email, string password)
+        {
+            Console.WriteLine("pass = "+password);
+            var user = new IdentityUser { UserName = email, Email = email};
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "PATIENT");
+                _context.Users.Add(new User
+                {
+                    user_email = user.Email,
+                    user_id = user.Id,
+                    user_last_name = lastName,
+                    user_first_name = firstName,
+                    user_password = password,
+                    user_role = "P"
+                });
+                await _context.SaveChangesAsync();
+               
+                _context.Patient.Add(new Patient
+                {
+                    patient_email = email,
+                    patient_id = user.Id,
+                    patient_last_name = lastName,
+                    patient_name = firstName
+                });
+                
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("UI_admin","Home");
+            }
+
+        
+            
+
+            return View("ManageUser");
+        }
+        
+        
     
 }
 

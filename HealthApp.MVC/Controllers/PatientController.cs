@@ -69,7 +69,6 @@ public class PatientController:Controller
         List<string> doctorList = new List<string>();
         List<string> doctorId = new List<string>();
 
-        // Only query the database if either doctorName or specialty is provided
         if (!string.IsNullOrEmpty(doctorName) || !string.IsNullOrEmpty(specialty))
         {
 
@@ -82,7 +81,6 @@ public class PatientController:Controller
             return View("DoctorSearch");
         }
 
-        // If no search criteria are provided, render the Search view
         return View();
     }
 
