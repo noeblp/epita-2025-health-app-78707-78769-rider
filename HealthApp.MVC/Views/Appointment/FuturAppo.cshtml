@@ -1,6 +1,6 @@
 @model List<Calendar>
 
-<h2 class="text-center">📅 Mes Rendez-vous</h2>
+<h2 class="text-center">📅 My Appointments</h2>
 <div class="container mt-4">
     <form method="get" asp-controller="Appointment" asp-action="FuturAppo">
         <div class="row mb-3">
@@ -47,7 +47,7 @@
                         <form method="post" asp-controller="Appointment" asp-action="CancelEvent">
                             <input type="hidden" name="id" value="@rdv.appo_id" />
                             <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-                                Annuler
+                                Cancel
                             </button>
                         </form>
                     </div>
