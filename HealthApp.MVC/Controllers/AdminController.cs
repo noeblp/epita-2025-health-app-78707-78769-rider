@@ -104,8 +104,6 @@ public class AdminController : Controller
                     user_id = user.Id,
                     user_last_name = user_last_name,
                     user_first_name = user_first_name,
-                    user_password = user_password,
-                    user_role = "D"
                 });
                 await _context.SaveChangesAsync();
 
@@ -211,8 +209,6 @@ public class AdminController : Controller
                     user_id = user.Id,
                     user_last_name = lastName,
                     user_first_name = firstName,
-                    user_password = password,
-                    user_role = "P"
                 });
                 await _context.SaveChangesAsync();
                

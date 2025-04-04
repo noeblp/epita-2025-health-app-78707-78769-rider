@@ -31,7 +31,7 @@ public class PatientController:Controller
         return View();
     }
     
-    public (List<string>,List<string>) GetDoctorList(string doctorName, string specialty)
+    public (List<string>,List<string>,List<string>) GetDoctorList(string doctorName, string specialty)
     {
         var query = _context.Doctors.AsQueryable();
 
@@ -51,15 +51,17 @@ public class PatientController:Controller
             .Select(d => new
             {
                 d.doctor_last_name,
-                d.doctor_id
+                d.doctor_id,
+                d.doctor_specialty
             })
             .ToList();
 
         
         var lastNames = doctors.Select(d => d.doctor_last_name).ToList();
         var doctorIds = doctors.Select(d => d.doctor_id.ToString()).ToList();
+        var doctorSpe=doctors.Select(d=>d.doctor_specialty).ToList();
 
-        return (lastNames, doctorIds);
+        return (lastNames, doctorIds,doctorSpe);
     }
     
     
@@ -68,15 +70,17 @@ public class PatientController:Controller
     {
         List<string> doctorList = new List<string>();
         List<string> doctorId = new List<string>();
+        List<string> doctorSpe = new List<string>();
 
         if (!string.IsNullOrEmpty(doctorName) || !string.IsNullOrEmpty(specialty))
         {
 
-            (doctorList,doctorId) = GetDoctorList( doctorName, specialty);
+            (doctorList,doctorId,doctorSpe) = GetDoctorList( doctorName, specialty);
             
 
             ViewBag.DoctorList = doctorList;
             ViewBag.DoctorId = doctorId;
+            ViewBag.DoctorSpe = doctorSpe;
             ViewBag.doctorName = doctorName;
             return View("DoctorSearch");
         }

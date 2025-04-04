@@ -77,19 +77,14 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Logout()
     {
-        HttpContext.Session.SetString("IsLoggedIn", "true");
+        
         HttpContext.Session.Clear();
         await _signInManager.SignOutAsync();
         ViewBag.P = null;
         return RedirectToAction("Index");
     }
 
-    public void push_patient(int id, string email, string role)
-    {
-        HttpContext.Session.SetInt32("user_id", id);
-        HttpContext.Session.SetString("user_email", email);
-        HttpContext.Session.SetString("user_role", role);
-    }
+    
 
     [HttpPost]
     public async Task<IActionResult> SubmitForm(string firstName, string lastName, string email, string password)
@@ -108,19 +103,9 @@ public class HomeController : Controller
                 user_id = user.Id,
                 user_last_name = lastName,
                 user_first_name = firstName,
-                user_password = password,
-                user_role = "P"
             });
             await _context.SaveChangesAsync();
-           /* _context.Doctors.Add(new Doctor
-            {
-                doctor_email = user.Email,
-                doctor_id = user.Id,
-                doctor_last_name = user.UserName,
-                doctor_specialty = "e",
-                doctor_first_name = user.UserName
-            });
-            await _context.SaveChangesAsync();*/
+           
             _context.Patient.Add(new Patient
             {
                 patient_email = email,
@@ -128,11 +113,7 @@ public class HomeController : Controller
                 patient_last_name = lastName,
                 patient_name = firstName
             });
-            /*_context.Admin.Add(new Admin
-            {
-                admin_id = user.Id,
-                admin_email = user.Email
-            });*/
+            
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -141,7 +122,7 @@ public class HomeController : Controller
         
         foreach (var error in result.Errors)
         {
-            _logger.LogError($"Error creating user: {error.Description}");
+            
             ModelState.AddModelError(string.Empty, error.Description);
         }
 
@@ -169,7 +150,6 @@ public class HomeController : Controller
                 Console.WriteLine("Role: "+role);
                 if (role == "DOCTOR")
                 {
-                   // HttpContext.Session.SetInt32("doctor_id", int.Parse(user.Id));
                     return RedirectToAction("HomeDoctor", "Doctor");
                 }
                 else if (role == "PATIENT")

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Search Results - Hospital Appointment System</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -27,18 +29,41 @@
             list-style-type: none;
             padding: 0;
         }
-        .doctor-list li {
+        .doctor-item {
+            display: flex;
+            align-items: center;
             padding: 15px;
             border-bottom: 1px solid #ddd;
             font-size: 1.1em;
+            transition: background 0.3s, transform 0.2s;
+            border-radius: 10px;
         }
-        .doctor-list li:last-child {
-            border-bottom: none;
+        .doctor-item:hover {
+            background: #e9f5ff;
+            transform: scale(1.02);
+        }
+        .doctor-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #0d6efd;
+        }
+        .doctor-item a {
+            text-decoration: none;
+            color: #333;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .no-results {
             text-align: center;
             font-size: 1.2em;
             color: #777;
+        }
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -46,7 +71,7 @@
 
 <div class="results-container">
     <div class="results-header">
-        <h2 class="text-primary fw-bold">Search Results</h2>
+        <h2 class="text-primary fw-bold"><i class="fas fa-user-md"></i> Search Results</h2>
         <p class="text-muted">Doctors matching your search criteria</p>
     </div>
 
@@ -55,8 +80,12 @@
         <ul class="doctor-list">
             @for (int i = 0; i < ViewBag.DoctorList.Count; i++)
             {
-                <li>
-                    <a href="@Url.Action("BookAppo", "Appointment", new { doctorId = @ViewBag.DoctorId[i] })"> @ViewBag.DoctorList[i], @ViewBag.DoctorId[i]</a>
+                <li class="doctor-item">
+                    <i class="fas fa-stethoscope doctor-icon"></i>
+                    <a href="@Url.Action("BookAppo", "Appointment", new { doctorId = ViewBag.DoctorId[i] })">
+                        <span>Dr @ViewBag.DoctorList[i]</span>
+                        <span class="text-muted">Specialty: @ViewBag.DoctorSpe[i]</span>
+                    </a>
                 </li>
             }
         </ul>
@@ -65,8 +94,10 @@
     {
         <p class="no-results">No doctors found.</p>
     }
+
+    <a href="/" class="btn btn-secondary back-btn"><i class="fas fa-arrow-left"></i> Back to Search</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

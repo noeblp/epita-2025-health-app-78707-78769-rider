@@ -4,23 +4,24 @@
 }
 
 <div class="container text-center mt-5">
-    <h1 class="display-4 text-primary fw-bold">Welcome to the Hospital Appointment System</h1>
-    <p class="lead text-secondary">
-        Easily book, manage, and view appointments with our trusted healthcare professionals.
-    </p>
+    <div class="card shadow-lg p-4">
+        
+        
+        <h1 class="display-4 text-primary fw-bold">
+            🏥 Welcome to the Hospital Appointment System
+        </h1>
+        
+        <p class="lead text-secondary">
+            Easily book, manage, and view appointments with our trusted healthcare professionals.
+        </p>
 
-    <div class="mt-4">
-        <a class="btn btn-primary btn-lg me-2" asp-controller="Patient" asp-action="Search">
-            📅 Book an Appointment
-        </a>
-        <a class="btn btn-outline-secondary btn-lg" asp-controller="Appointment" asp-action="FuturAppo">
-            View my futur Appointment
-        </a>
-        
-        
-    </div>
-
-    <div class="mt-5">
-        
+        <div class="mt-4">
+            <a class="btn btn-primary btn-lg me-2" asp-controller="Patient" asp-action="Search">
+                📅 Book an Appointment
+            </a>
+            <a class="btn btn-outline-secondary btn-lg" asp-controller="Appointment" asp-action="FuturAppo">
+                📖 View My Future Appointments
+            </a>
+        </div>
     </div>
 </div>
