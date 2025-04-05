@@ -8,84 +8,103 @@
     int week = ViewBag.CurrentWeek;
     var events = ViewBag.Events as List<hospital.Models.Calendar>;
     var startOfWeek = ViewBag.StartOfWeek as DateTime? ?? DateTime.Now;
-    
-    
 }
-@if (Context.Session.GetString("user_role") == "D")
-{
-    
-    <a class="btn btn-primary text-white fw-bold px-4 py-2"
-       asp-area="" asp-controller="Doctor" asp-action="HomeDoctor">
-        Home
-    </a>
-    
-}
-else
-{
-    <a class="btn btn-primary text-white fw-bold px-4 py-2"
-       asp-area="" asp-controller="Home" asp-action="UI_Patient">
-        Home
-    </a>
-}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-<h2 style="text-align: center; font-size: 1.5rem;">Week of @startOfWeek.ToString("dd MMMM yyyy", new CultureInfo("en-US"))</h2>
+<div class="d-flex justify-content-between align-items-center mb-4 px-4">
+    @if (Context.Session.GetString("user_role") == "D")
+    {
+        <a class="btn btn-outline-primary fw-bold" asp-controller="Doctor" asp-action="HomeDoctor">
+            <i class="fa-solid fa-stethoscope"></i> Home
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-outline-success fw-bold" asp-controller="Home" asp-action="UI_Patient">
+            <i class="fa-solid fa-house-user"></i> Home
+        </a>
+    }
 
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100vh;">
-    <table style="width: 100%; max-width: 1000px; border-collapse: collapse; height: 80%; overflow: auto; table-layout: fixed;">
-        <thead>
-        <tr style="background-color: #f0f0f0; height: 5%">
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 10%;"></th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Monday @(startOfWeek.AddDays(0).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Tuesday @(startOfWeek.AddDays(1).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Wednesday @(startOfWeek.AddDays(2).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Thursday @(startOfWeek.AddDays(3).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Friday @(startOfWeek.AddDays(4).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Saturday @(startOfWeek.AddDays(5).ToString("dd"))</th>
-            <th style="border: 1px solid black; text-align: center; padding: 10px; width: 12.85%;">Sunday @(startOfWeek.AddDays(6).ToString("dd"))/th>
-        </tr>
-        </thead>
-        <tbody>
-        @for (int hour = 8; hour <= 18; hour++)
-        {
-            <tr>
-                <td style="border: 1px solid black; text-align: center; font-weight: bold; width: 10%; background-color: #f8f9fa; padding: 10px;">
-                    @hour:00
-                </td>
-                @for (int i = 0; i < 7; i++)
+    <h2 class="text-center text-primary fw-bold">
+        Week of @startOfWeek.ToString("dd MMMM yyyy", new CultureInfo("en-US"))
+    </h2>
+
+    <div></div> <!-- just to balance the flex layout -->
+</div>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle shadow-sm">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 8%"></th>
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        <th class="fw-bold" style="width: 13%;">
+                            @startOfWeek.AddDays(i).ToString("dddd", new CultureInfo("en-US")) <br />
+                            <span class="text-muted">@startOfWeek.AddDays(i).ToString("dd MMM", new CultureInfo("en-US"))</span>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (int hour = 8; hour <= 18; hour++)
                 {
-                    var currentDate = startOfWeek.AddDays(i);
-                    var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
-                    <td style="border: 1px solid black; text-align: center; vertical-align: top; font-size: 1rem; width: 12.85%; min-height: 50px; overflow: hidden; padding: 5px;">
-                        @if (eventToday != null && eventToday.Any())
+                    <tr>
+                        <td class="bg-light fw-bold">@hour:00</td>
+                        @for (int i = 0; i < 7; i++)
                         {
-                            @foreach (var evt in eventToday)
-                            {
-                                <div style="background: linear-gradient(135deg, #ff7e5f, #feb47b);color: white;font-weight: bold;
-                            word-wrap: break-word;
-                            margin-top: 5px;
-                            padding: 8px;
-                            border-radius: 6px;
-                            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
-                            transition: transform 0.2s ease-in-out;
-                            cursor: pointer;
-                        " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                    @evt.Title
-                                </div>
-                            }
+                            var currentDate = startOfWeek.AddDays(i);
+                            var eventToday = events?.Where(e => e.Date.Date == currentDate.Date && e.Date.Hour == hour).ToList();
+                            <td style="position: relative;">
+                                @if (eventToday != null && eventToday.Any())
+                                {
+                                    foreach (var evt in eventToday)
+                                    {
+                                        <div class="event-card">
+                                            
+                                            <strong>@evt.Title</strong>
+                                        </div>
+                                    }
+                                }
+                            </td>
                         }
-                    </td>
+                    </tr>
                 }
-            </tr>
-        }
-
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div style="position: absolute; left: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week - 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">← Previous week </a>
+<div class="d-flex justify-content-between mt-4 px-4">
+    <a class="btn btn-outline-secondary" href="@Url.Action("Calendar", new { year = year, month = month, week = week - 1 })">
+        ← Previous week
+    </a>
+    <a class="btn btn-outline-secondary" href="@Url.Action("Calendar", new { year = year, month = month, week = week + 1 })">
+        Next week →
+    </a>
 </div>
 
-<div style="position: absolute; right: 10px; top: 80%; transform: translateY(-50%); border: 2px solid #000; padding: 10px;">
-    <a href="@Url.Action("Calendar", new { year = year, month = month, week = week + 1 })" style="text-decoration: none; color: #000; font-size: 1rem;">Next week →</a>
-</div>
+<style>
+    .event-card {
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: white;
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-size: 0.9rem;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    .event-card:hover {
+        transform: scale(1.05);
+    }
+
+    th, td {
+        vertical-align: top;
+    }
+
+    
+</style>

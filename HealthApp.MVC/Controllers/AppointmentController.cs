@@ -116,7 +116,7 @@ public class AppointmentController:Controller
     public List<(string,string,string,int)> GetPatientEvents(string patientId)
     {
         var appointments = _context.Appointment
-            .Where(a => a.doctor_id == patientId && a.valid == "A")
+            .Where(a => a.doctor_id == patientId && (a.valid == "A" || a.valid=="N"))
             .Select(a => new { a.date, a.hour, a.name, a.appo_id })
             .ToList();
     
@@ -135,7 +135,10 @@ public class AppointmentController:Controller
         string? dates = TempData["SelectedDate"] as string;
         string? months = TempData["SelectedMonth"] as string;
         string? years = TempData["SelectedYear"] as string;
-        
+        if (!string.IsNullOrEmpty(dates))
+        {
+            dates = int.Parse(dates).ToString("D2");
+        }
         
         if (!string.IsNullOrEmpty(months))
         {
@@ -198,9 +201,9 @@ public class AppointmentController:Controller
                 .Select(d => d.doctor_last_name)
                 .FirstOrDefault() ?? " ";
             string stat;
-            if (a.valid == "A") stat="validé";
-            else if (a.valid=="N") stat="en attente";
-            else stat="annulé";
+            if (a.valid == "A") stat="valid";
+            else if (a.valid=="N") stat="on hold";
+            else stat="canceled";
             
         
             rdvs.Add(new Calendar
@@ -250,10 +253,6 @@ public class AppointmentController:Controller
 
         _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been canceled." });
         _context.SaveChanges();
-        
-        
-        
-        
         
         string sql = "UPDATE Appointment SET valid = 'C' WHERE appo_id = @p0";
         _context.Database.ExecuteSqlRaw(sql, id);
