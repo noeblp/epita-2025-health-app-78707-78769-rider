@@ -6,6 +6,7 @@ using HealthApp.Razor.Data;
 using Microsoft.AspNetCore.Mvc;
 using hospital.Models;
 using hospital.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Sqlite;
@@ -32,8 +33,9 @@ public class HomeController : Controller
         _context.Database.EnsureCreated();
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        await _signInManager.SignOutAsync();
         ViewBag.incorrect = false;
         return View();
     }
@@ -55,6 +57,7 @@ public class HomeController : Controller
         return View();
     }
 
+    
     public IActionResult Doctors()
     {
         return RedirectToAction("HomeDoctor", "Doctor");
