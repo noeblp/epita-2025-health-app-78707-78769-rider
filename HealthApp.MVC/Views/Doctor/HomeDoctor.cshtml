@@ -112,7 +112,7 @@
         <!-- Appointment Approval Section -->
         <div class="appointment-list">
             <h4>Upcoming Appointments</h4>
-            <p>List of appointments will be displayed here.</p>
+            
             <tr>
                 @for (int i = 0; i < 1; i++)
                 {
@@ -131,7 +131,7 @@
                                     <form method="post" asp-controller="Doctor" asp-action="AcceptEvent">
                                         <input type="hidden" name="id" value="@evt.appo_id" />
                                         <button type="submit" style="background-color: green; color: white; border: none; padding: 5px 10px; margin-right: 5px; cursor: pointer;">
-                                            Accepter
+                                            Accept
                                         </button>
                                     </form>
 
@@ -139,7 +139,7 @@
                                     <form method="post" asp-controller="Doctor" asp-action="DeclineEvent">
                                         <input type="hidden" name="id" value="@evt.appo_id" />
                                         <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
-                                            Refuser
+                                            Decline
                                         </button>
                                     </form>
 

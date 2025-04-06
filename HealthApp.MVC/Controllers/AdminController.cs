@@ -117,9 +117,7 @@ public class AdminController : Controller
                 });
                 await _context.SaveChangesAsync();
             }
-
-            //####################################CHANGE REDIRECTION###########################################
-            return RedirectToAction("UI_admin","Home"); // Redirect back to the user list
+            return RedirectToAction("UI_admin","Home"); 
     }
         
         
@@ -219,15 +217,9 @@ public class AdminController : Controller
                     patient_last_name = lastName,
                     patient_name = firstName
                 });
-                
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction("UI_admin","Home");
             }
-
-        
-            
-
             return View("ManageUser");
         }
         

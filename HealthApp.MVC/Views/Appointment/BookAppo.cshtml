@@ -1,3 +1,4 @@
+@using System.Globalization
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -42,6 +43,12 @@
                 <label class="form-label fw-bold text-primary">Doctor Specialty</label>
                 <input type="text" name="name" value="@ViewBag.DoctorSpecialty" class="form-control-plaintext" readonly />
             </div>
+            @if (TempData["AlertMessage"] != null)
+            {
+                <a>
+                    @TempData["AlertMessage"];
+                </a>
+            }
 
             
 
@@ -52,13 +59,13 @@
 
     <!-- Calendar -->
     <div style="flex: 1;">
-        <h2 class="text-center">Week of @startOfWeek.ToString("dd MMMM yyyy")</h2>
+        <h2 class="text-center">Week of @startOfWeek.ToString("dd MMMM yyyy",new CultureInfo("en-US"))</h2>
         <table class="table table-bordered text-center">
             <thead class="table-light">
                 <tr>
                     @for (int i = 0; i < 7; i++)
                     {
-                        <th>@startOfWeek.AddDays(i).ToString("dddd dd")</th>
+                        <th>@startOfWeek.AddDays(i).ToString("dddd dd",new CultureInfo("en-US"))</th>
                     }
                 </tr>
             </thead>

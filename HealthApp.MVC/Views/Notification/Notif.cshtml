@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <div class="card shadow-lg p-3 mb-5 bg-white rounded">
         <div class="card-body">
-            <h2 class="text-center text-primary mb-4"><i class="bi bi-bell-fill"></i> Notifications</h2>
+            <h2 class="text-center text-primary mb-4"><i class="bi bi-bell-fill"></i> Notification</h2>
 
             @if (ViewBag.Notifications != null && ViewBag.Notifications.Count > 0)
             {
@@ -24,7 +24,7 @@
             else
             {
                 <div class="alert alert-warning text-center" role="alert">
-                    <i class="bi bi-exclamation-circle"></i> Aucune notification trouvée.
+                    <i class="bi bi-exclamation-circle"></i> No notifications found.
                 </div>
             }
         </div>

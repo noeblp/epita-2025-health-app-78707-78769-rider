@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using HealthApp.Razor.Data;
 using hospital.Models;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Calendar = hospital.Models.Calendar;
 
 namespace hospital.Controllers;
 
@@ -39,25 +41,16 @@ public class AppointmentController:Controller
             ViewBag.SelectedDate = HttpContext.Session.GetString("SelectedDate") + "/" +
                                    HttpContext.Session.GetString("SelectedMonth") + "/" +
                                    HttpContext.Session.GetString("SelectedYear");
-            
-
         }
-
-        
         if (HttpContext.Session.GetString("doctor_id") == null)
         {
             HttpContext.Session.SetString("doctor_id",doctorId.ToString());
         }
         
-        
         var doc = _context.Doctors.FirstOrDefault(e => e.doctor_id == HttpContext.Session.GetString("doctor_id"));
         
         ViewBag.DoctorName = doc.doctor_last_name;
         ViewBag.DoctorSpecialty = doc.doctor_specialty;
-        
-        
-
-       
         int currentYear = year ?? DateTime.Now.Year;
         int currentMonth = month ?? DateTime.Now.Month;
 
@@ -68,17 +61,13 @@ public class AppointmentController:Controller
         if (firstMonday > firstDayOfMonth) firstMonday = firstMonday.AddDays(-7);
 
         var startOfWeek = firstMonday.AddDays((currentWeek - 1) * 7);
-            
-
-            
+        
         List<(string,string,string,int)> res;
         
         var user_email=HttpContext.Session.GetString("user_email");
         var user= _context.Users.FirstOrDefault(e=>e.user_email==user_email);
         res =GetPatientEvents(doctorId);
         
-
-
         var events = new List<Calendar>();
 
         foreach (var c in res)
@@ -95,8 +84,7 @@ public class AppointmentController:Controller
             events.Add(new Calendar { Title = dateStr.Item3, Date = new DateTime(a, m, j, h, ms, 0), user_Id = user.user_id,appo_id = dateStr.Item4});
             Console.WriteLine(j);
         }
-            
-
+        
         ViewBag.CurrentYear = currentYear;
         ViewBag.CurrentMonth = currentMonth;
         ViewBag.CurrentWeek = currentWeek;
@@ -150,8 +138,13 @@ public class AppointmentController:Controller
         }
         
         string? final_date=dates+"/"+months+"/"+years;
-        
-        
+        var test=_context.Appointment.FirstOrDefault(e=>e.patient_id==user.user_id && e.date==final_date && e.hour==hour);
+        if (test != null)
+        {
+            TempData["AlertMessage"] = "You have already an appointment at this time";
+        }
+
+
         int max =_context.Appointment.Max(a=>a.appo_id);
         
         _context.Appointment.Add(new Appointments
@@ -168,14 +161,14 @@ public class AppointmentController:Controller
     {
         
         TempData["SelectedHour"] = hour.ToString();
-        TempData["SelectedDate"] = date.ToString();
-        TempData["SelectedMonth"] = month.ToString();
-        TempData["SelectedYear"] = year.ToString();
+        TempData["SelectedDate"] = date.ToString(new CultureInfo("en-US"));
+        TempData["SelectedMonth"] = month.ToString(new CultureInfo("en-US"));
+        TempData["SelectedYear"] = year.ToString(new CultureInfo("en-US"));
         HttpContext.Session.SetString("SelectedHour", TempData["SelectedHour"]?.ToString());
         HttpContext.Session.SetString("SelectedDate", TempData["SelectedDate"]?.ToString());
         HttpContext.Session.SetString("SelectedMonth", TempData["SelectedMonth"]?.ToString());
         HttpContext.Session.SetString("SelectedYear", TempData["SelectedYear"]?.ToString());
-
+        //change
         return RedirectToAction("BookAppo");    
     }
 
@@ -204,6 +197,7 @@ public class AppointmentController:Controller
             if (a.valid == "A") stat="valid";
             else if (a.valid=="N") stat="on hold";
             else stat="canceled";
+            
             
         
             rdvs.Add(new Calendar

@@ -31,11 +31,12 @@ public class HomeController : Controller
         _userManager = userManager;
         _signInManager = signInManager;
         _context.Database.EnsureCreated();
+        
     }
 
     public async Task<IActionResult> Index()
     {
-        await _signInManager.SignOutAsync();
+        
         ViewBag.incorrect = false;
         return View();
     }

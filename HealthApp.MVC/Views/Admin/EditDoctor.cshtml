@@ -4,28 +4,28 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-lg p-4 rounded-4">
-                <h2 class="text-center mb-4 text-primary">🩺 Modifier un Médecin</h2>
+                <h2 class="text-center mb-4 text-primary">🩺 Update a doctor</h2>
 
                 <form method="post" asp-controller="Admin" asp-action="UpdateDoctor">
                     <input type="hidden" name="doctor_id" value="@Model.doctor_id">
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">👤 Prénom</label>
+                        <label class="form-label fw-bold">👤 First Name</label>
                         <input type="text" class="form-control rounded-3" name="doctor_first_name" value="@Model.doctor_first_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">👤 Nom</label>
+                        <label class="form-label fw-bold">👤 Last Name</label>
                         <input type="text" class="form-control rounded-3" name="doctor_last_name" value="@Model.doctor_last_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">📧 Email</label>
+                        <label class="form-label fw-bold">📧 email</label>
                         <input type="email" class="form-control rounded-3" name="doctor_email" value="@Model.doctor_email" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">🏥 Spécialité</label>
+                        <label class="form-label fw-bold">🏥 Specialty</label>
                         <select name="doctor_specialty" class="form-select rounded-3">
                             <option value="@Model.doctor_specialty" selected>@Model.doctor_specialty</option>
                             <option value="Anesthesiology">Anesthésiologie</option>
@@ -50,7 +50,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 fw-bold">
-                        ✅ Mettre à jour le médecin
+                        ✅ Update
                     </button>
                 </form>
             </div>
