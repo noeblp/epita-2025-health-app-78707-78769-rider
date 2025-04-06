@@ -1,66 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Hospital Appointment System</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Hospital System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .admin-container {
-            max-width: 900px;
+
+        
+
+        .dashboard-container {
+            max-width: 1200px;
             margin: auto;
-            margin-top: 50px;
+            padding: 60px 20px;
         }
-        .admin-card {
-            padding: 20px;
+
+        .dashboard-header {
             text-align: center;
-            border-radius: 10px;
-            transition: transform 0.2s;
+            margin-bottom: 40px;
         }
-        .admin-card:hover {
-            transform: scale(1.05);
+
+        .dashboard-header h2 {
+            font-weight: bold;
+            color: #0d6efd;
         }
+
+        .dashboard-card {
+            border: none;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        a.card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        
+        
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h2 class="text-center text-primary fw-bold">Admin Dashboard</h2>
-    <p class="text-center text-muted">Manage hospital operations
-    
-        </p>
+
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h2>Admin Dashboard</h2>
+        <p class="text-muted">Effortlessly manage hospital operations</p>
+    </div>
 
     <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card bg-danger text-white admin-card">
-                <a href="/Admin/Manage" class="text-white text-decoration-none">
-                    <h4>Manage Appointments</h4>
-                </a>
-            </div>
+        <div class="col-sm-6 col-lg-3">
+            <a href="/Admin/Manage" class="card-link">
+                <div class="card bg-danger text-white dashboard-card">
+                    <div class="dashboard-icon"><i class="bi bi-calendar2-check-fill"></i></div>
+                    <h5>Manage Appointments</h5>
+                </div>
+            </a>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-info text-white admin-card">
-                <a href="/Admin/AddDoctor" class="text-white text-decoration-none">
-                    <h4>Create New Doctor</h4>
-                </a>
-            </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <a href="/Admin/AddDoctor" class="card-link">
+                <div class="card bg-info text-white dashboard-card">
+                    <div class="dashboard-icon"><i class="bi bi-person-plus-fill"></i></div>
+                    <h5>Create New Doctor</h5>
+                </div>
+            </a>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-warning text-dark admin-card">
-                <a href="/Admin/UserList" class="text-dark text-decoration-none">
-                    <h4>Update User Details</h4>
-                </a>
-            </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <a href="/Admin/UserList" class="card-link">
+                <div class="card bg-warning text-dark dashboard-card">
+                    <div class="dashboard-icon"><i class="bi bi-pencil-square"></i></div>
+                    <h5>Update User Details</h5>
+                </div>
+            </a>
         </div>
-        <div class="col-md-6">
-            <div class="card bg-secondary text-white admin-card">
-                <a href="/Admin/ManageUser" class="text-white text-decoration-none">
-                    <h4>Manage Users</h4>
-                </a>
-            </div>
+
+        <div class="col-sm-6 col-lg-3">
+            <a href="/Admin/ManageUser" class="card-link">
+                <div class="card bg-secondary text-white dashboard-card">
+                    <div class="dashboard-icon"><i class="bi bi-people-fill"></i></div>
+                    <h5>Manage Users</h5>
+                </div>
+            </a>
         </div>
     </div>
 </div>
