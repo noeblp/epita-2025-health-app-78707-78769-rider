@@ -58,14 +58,13 @@ public class AdminController : Controller
   
     public async Task<IActionResult> EditUser(string userid)
     {
-        Console.WriteLine($"User ID reçu: {userid}");
+       
         var user = _context.Users.FirstOrDefault(a => a.user_id == userid);
         
         
         var test = await _userManager.FindByIdAsync(user.user_id);
         var roles = await _userManager.GetRolesAsync(test);
         string role = roles.Count > 0 ? roles[0] : "Unknown";
-        Console.WriteLine("Role: "+role);
         if (role == "DOCTOR")
         {
             return RedirectToAction("EditDoctor", "Admin", new {id = user.user_id});
@@ -131,7 +130,7 @@ public class AdminController : Controller
 
         public IActionResult Delete(int id)
         {
-            _context.Appointment.FirstOrDefault(e=>e.appo_id==id)!.valid="C";
+            _context.Appointment.FirstOrDefault(e=>e.appo_id==id).valid="C";
             _context.SaveChanges();
             
             
@@ -223,23 +222,7 @@ public class AdminController : Controller
             return View("ManageUser");
         }
         
-        [HttpPost]
-        public IActionResult DeleteUser(int user_id)
-        {
-            using (var connection = new SqliteConnection(_connectionString))
-            {
-                connection.Open();
-
-                
-                var deleteCommand = new SqliteCommand("DELETE FROM users WHERE user_id = @id", connection);
-                deleteCommand.Parameters.AddWithValue("@id", user_id);
-                deleteCommand.ExecuteNonQuery();
-
-                connection.Close();
-            }
-
-            return RedirectToAction("UserList");
-        }
+        
         
         
     
