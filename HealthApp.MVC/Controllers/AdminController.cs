@@ -110,9 +110,9 @@ public class AdminController : Controller
                 {
                     doctor_email = user.Email,
                     doctor_id = user.Id,
-                    doctor_last_name = user.UserName,
+                    doctor_last_name = user_last_name,
                     doctor_specialty = specialty,
-                    doctor_first_name = user.UserName
+                    doctor_first_name = user_first_name
                 });
                 await _context.SaveChangesAsync();
             }
