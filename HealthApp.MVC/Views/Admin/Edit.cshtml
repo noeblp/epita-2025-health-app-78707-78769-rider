@@ -2,6 +2,11 @@
 
 <h2>Update appointment</h2>
 
+
+<a class="btn btn-outline-primary fw-bold" asp-controller="Admin" asp-action="Manage">
+    <i class="fa-solid fa-stethoscope"></i> Go back
+</a>
+
 <form asp-action="Edit" method="post" class="p-4 shadow rounded bg-light">
     <input type="hidden" asp-for="appo_id" />
 
@@ -17,7 +22,7 @@
 
     <div class="mb-3">
         <label class="form-label fw-bold">Specialty</label>
-        <input type="text" asp-for="name" class="form-control" placeholder="Entrez la spécialité" />
+        <input type="text" asp-for="name" class="form-control" placeholder="Enter specialty" />
     </div>
 
     <button type="submit" class="btn btn-primary w-100">Save</button>
