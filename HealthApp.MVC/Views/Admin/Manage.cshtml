@@ -1,10 +1,54 @@
 @model List<Appointments>
+@{
+    ViewData["Title"] = "List of Appointments";
+    var doctors = ViewBag.Doctors as List<Doctor>;     // List of available doctors
+    var patients = ViewBag.Patients as List<Patient>;  // List of available patients
+}
 
 <h2>List of Appointments</h2>
+
+<!-- Filter Form 
+<form method="get" asp-action="FilteredAppointments" asp-controller="Admin" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" name="date" id="date" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label for="doctorId" class="form-label">Doctor</label>
+        <select name="doctorId" id="doctorId" class="form-select">
+            <option value="">All Doctors</option>
+            @if (doctors != null)
+            {
+                foreach (var doc in doctors)
+                {
+                    <option value="@doc.doctor_id">@doc.doctor_last_name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="patientId" class="form-label">Patient</label>
+        <select name="patientId" id="patientId" class="form-select">
+            <option value="">All Patients</option>
+            @if (patients != null)
+            {
+                foreach (var pat in patients)
+                {
+                    <option value="@pat.patient_id">@pat.patient_last_name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+-->
+
+<!-- Appointment Table -->
 <table class="table">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Date</th>
         <th>Description</th>
         <th>Actions</th>
@@ -14,12 +58,11 @@
     @foreach (var rdv in Model)
     {
         <tr>
-            <td>@rdv.appo_id</td>
             <td>@rdv.date</td>
             <td>@rdv.name</td>
             <td>
-                <a href="@Url.Action("Edit", "Admin", new { id = rdv.appo_id })" class="btn btn-warning">Modif</a>
-                <a href="@Url.Action("Delete", "Admin", new { id = rdv.appo_id })" class="btn btn-warning">Delete</a>
+                <a href="@Url.Action("Edit", "Admin", new { id = rdv.appo_id })" class="btn btn-warning">Modify</a>
+                <a href="@Url.Action("Delete", "Admin", new { id = rdv.appo_id })" class="btn btn-danger">Delete</a>
             </td>
         </tr>
     }

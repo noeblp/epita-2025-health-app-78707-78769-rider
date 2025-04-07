@@ -223,6 +223,24 @@ public class AdminController : Controller
             return View("ManageUser");
         }
         
+        [HttpPost]
+        public IActionResult DeleteUser(int user_id)
+        {
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                connection.Open();
+
+                
+                var deleteCommand = new SqliteCommand("DELETE FROM users WHERE user_id = @id", connection);
+                deleteCommand.Parameters.AddWithValue("@id", user_id);
+                deleteCommand.ExecuteNonQuery();
+
+                connection.Close();
+            }
+
+            return RedirectToAction("UserList");
+        }
+        
         
     
 }
