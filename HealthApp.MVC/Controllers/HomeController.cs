@@ -146,6 +146,7 @@ public class HomeController : Controller
             {
                 HttpContext.Session.SetString("IsLoggedIn", "true");
                 HttpContext.Session.SetString("user_email", email);
+                HttpContext.Session.SetString("user_id", user.Id);
                 
                 var roles = await _userManager.GetRolesAsync(user);
                 string role = roles.Count > 0 ? roles[0] : "Unknown";

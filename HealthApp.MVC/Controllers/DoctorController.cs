@@ -149,7 +149,7 @@ public class DoctorController : Controller
         var email=_context.Users.FirstOrDefault(e=>e.user_id==appo.patient_id).user_email;
         SendMail.SendConfirmationEmail(email, "Appointment accepted", "Your appointment on " +appo.date +" at "+ appo.hour+" has been accepted.");
 
-        _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.doctor_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been accepted." });
+        _context.Notifications.Add(new Notifications { notif_id = maxId+1, patient_id = appo.patient_id, content = "The appointment on " +appo.date +"  at "+ appo.hour+" has been accepted." });
         _context.SaveChanges();
     
         string sql = "UPDATE Appointment SET valid = 'A' WHERE appo_id = @p0";

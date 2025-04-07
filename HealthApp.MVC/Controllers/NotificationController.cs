@@ -15,10 +15,10 @@ public class NotificationController:Controller
     {
         _context = context;
     }
-    public IActionResult Notif(int id)
+    public IActionResult Notif(string id)
     {
         var Notifications = _context.Notifications
-            .Where(n => n.patient_id == id.ToString())
+            .Where(n => n.patient_id == id)
             .ToList();
         ViewBag.Notifications = Notifications;
         return View();
