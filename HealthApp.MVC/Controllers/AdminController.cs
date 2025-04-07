@@ -120,8 +120,6 @@ public class AdminController : Controller
     }
         
         
-        
-        
         public IActionResult Manage()
         {
             var rdvs = _context.Appointment.ToList();
