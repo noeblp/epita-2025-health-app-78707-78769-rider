@@ -12,18 +12,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
 <div class="d-flex justify-content-between align-items-center mb-4 px-4">
-    @if (Context.Session.GetString("user_role") == "D")
-    {
+    
         <a class="btn btn-outline-primary fw-bold" asp-controller="Doctor" asp-action="HomeDoctor">
             <i class="fa-solid fa-stethoscope"></i> Home
         </a>
-    }
-    else
-    {
-        <a class="btn btn-outline-success fw-bold" asp-controller="Home" asp-action="UI_Patient">
-            <i class="fa-solid fa-house-user"></i> Home
-        </a>
-    }
+    
+    
 
     <h2 class="text-center text-primary fw-bold">
         Week of @startOfWeek.ToString("dd MMMM yyyy", new CultureInfo("en-US"))
