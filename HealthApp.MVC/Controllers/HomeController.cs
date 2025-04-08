@@ -23,6 +23,13 @@ public class HomeController : Controller
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
 
+    // You can find the user information like password and username in the README file
+     
+
+
+
+
+
     public HomeController(ILogger<HomeController> logger, ApplicationDbContext context,
         UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
     {
